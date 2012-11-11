@@ -1,0 +1,53 @@
+<?php /*
+for more information: see languages.txt in the lang folder. 
+*/
+$langActivate = "Zobrazit";
+$langDeactivate = "Skrýt";
+$langInLnk  = "Skryté nástroje a odkazy";
+$langDelLk = "Opravdu chcete smazat tento odkaz?";
+$langCourseCreate  = "Vytvo&#345;it kurz";
+$langNameOfTheLink  = "Název odkazu";
+$lang_main_categories_list                  = "Seznam hlavních kategorií";
+$langCourseAdminOnly = "Jen pro lektory";
+$PlatformAdminOnly = "Jen pro administrátory platformy";
+$langCombinedCourse = "Kombinovaný kurz";
+$ToolIsNowVisible = "Nástroj je nyní viditelný.";
+$ToolIsNowHidden = "Nástroj je nyní neviditelný.";
+$EditLink = "Editovat odkaz";
+$Blog_management = "Administrace Blog&#367;";
+$Forum = "Fóra";
+$Course_maintenance = "Spravovat kurz";
+$TOOL_SURVEY = "Ankety";
+$GreyIcons = "Sada nástroj&#367;";
+$Interaction = "Interakce";
+$Authoring = "Auto&#345;i";
+$Administration = "Administrace";
+$IntroductionTextUpdated = "Úvodní text aktualizován";
+$IntroductionTextDeleted = "Úvodní text smazán";
+$SessionIdentifier = "Identifikátor sezení";
+$SessionName = "Název sezení";
+$SessionCategory = "Kategorie sezení";
+$SessionData = "Data sezení";
+$ActivityOne = "&#268;innost 1";
+$ActivityTwo = "&#268;innost 2";
+$ActivityThree = "&#268;innost 3";
+$ActivityFour = "&#268;innost 4";
+$ActivityFive = "&#268;innost 5";
+$ChapterOne = "Kapitola 1";
+$ChapterTwo = "Kapitola 2";
+$ChapterThree = "Kapitola 3";
+$ChapterFour = "Kapitola 4";
+$ChapterFive = "Kapitola 5";
+$InteractionOne = "Interakce 1";
+$InteractionTwo = "Interakce 2";
+$InteractionThree = "Interakce 3";
+$InteractionFour = "Interakce 4";
+$InteractionFive = "Interakce 5";
+$WeekOne = "1. týden";
+$WeekTwo = "2. týden";
+$WeekThree = "3. týden";
+$WeekFour = "4 týden";
+$WeekFive = "5. týden";
+$ViewHomeAsLearner = "Zobrazit z pohledu studenta";
+$ViewHomeAsTrainer = "Zobrazit z pohledu lektora";
+?>

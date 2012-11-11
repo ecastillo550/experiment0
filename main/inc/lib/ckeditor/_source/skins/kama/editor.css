@@ -1,0 +1,43 @@
+/*
+Copyright (c) 2003-2011, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.html or http://ckeditor.com/license
+*/
+
+@import url("reset.css");
+@import url("mainui.css");
+@import url("panel.css");
+@import url("toolbar.css");
+@import url("menu.css");
+@import url("richcombo.css");
+@import url("elementspath.css");
+@import url("icons.css");
+@import url("presets.css");
+
+/* Restore the container visibility */
+html .cke_skin_kama
+{
+	visibility: inherit;
+       
+}
+html .cke_editor_intro_content{
+    width: 99%!important;
+}
+html .cke_editor_glossary_comment{
+    width: 99%!important;
+}
+html .cke_editor_content{
+    width: 99%!important;
+}
+html.cke_skin_kama_container
+{
+	visibility: visible;
+}
+html .cke_editor_post_text
+{
+	width: 99%!important;
+}
+html .cke_editor_questionDescription
+{
+    width: 390px!important;
+}
+

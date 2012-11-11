@@ -1,0 +1,43 @@
+/* 
+    Document   : certificates
+    Created on : Apr 14, 2012, 4:20:11 PM
+    Author     : christian
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* Certificate background */
+.bg-certificate01 {
+    background-image: url(images/certificates/certificate01.jpg);
+    background-repeat: no-repeat;
+    width: 1070px;
+    height:756px;
+    margin:0px;
+    z-index: -10;
+}
+
+.bg-certificate02 {
+    background-image: url(images/certificates/certificate02.jpg);
+    background-repeat: no-repeat;
+    width: 1070px;
+    height:756px;
+    margin:0px;
+    z-index: -10;
+}
+
+.bg-certificate03 {
+    background-image: url(images/certificates/certificate03.jpg);
+    background-repeat: no-repeat;
+    width: 1070px;
+    height:756px;
+    margin:0px;
+    z-index: -10;
+}
+
+.certificate-drag {
+    position:absolute;
+    top:20px;
+    left:20px;
+    z-index: 100;
+}
+
