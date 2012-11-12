@@ -621,7 +621,7 @@ if (!empty ($_GET['student'])) {
 	</table>
 
 	<!-- line about learnpaths -->
-				<table class="data_table">
+				<table id="studentmodule" class="data_table">
 					<tr>
 						<th>
 							<?php echo get_lang('Learnpaths');?>

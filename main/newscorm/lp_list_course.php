@@ -291,12 +291,264 @@ function savelporder(str)
 		{
 			echo '<div align="center"><a href="lp_controller.php?' . api_get_cidreq().'">'.get_lang('NoCourse').'</a></div>';
 		}
-		
-	?>
+ ///------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------   
+    // Database Table Definitions
+$tbl_user = Database :: get_main_table(TABLE_MAIN_USER);
+$tbl_session_user = Database :: get_main_table(TABLE_MAIN_SESSION_USER);
+$tbl_session = Database :: get_main_table(TABLE_MAIN_SESSION);
+$tbl_session_course = Database :: get_main_table(TABLE_MAIN_SESSION_COURSE);
+$tbl_session_course_user = Database :: get_main_table(TABLE_MAIN_SESSION_COURSE_USER);
+$tbl_course = Database :: get_main_table(TABLE_MAIN_COURSE);
+$tbl_course_user = Database :: get_main_table(TABLE_MAIN_COURSE_USER);
+$tbl_stats_exercices = Database :: get_statistic_table(TABLE_STATISTIC_TRACK_E_EXERCICES);
+$tbl_stats_exercices_attempts = Database :: get_statistic_table(TABLE_STATISTIC_TRACK_E_ATTEMPT);
+//$tbl_course_lp_view = Database :: get_course_table(TABLE_LP_VIEW);
+//$tbl_course_lp_view_item = Database :: get_course_table(TABLE_LP_ITEM_VIEW);
+//$tbl_course_lp_item = Database :: get_course_table(TABLE_LP_ITEM);
+
+$tbl_course_lp_view = 'lp_view';
+$tbl_course_lp_view_item = 'lp_item_view';
+$tbl_course_lp_item = 'lp_item';
+$tbl_course_lp = 'lp';
+$tbl_course_quiz = 'quiz';
+$course_quiz_question = 'quiz_question';
+$course_quiz_rel_question = 'quiz_rel_question';
+$course_quiz_answer = 'quiz_answer';
+$course_student_publication = Database :: get_course_table(TABLE_STUDENT_PUBLICATION);
+
+$course = $_GET['cidreq'];
+
+if (api_is_allowed_to_edit()) { 
+for($student_id = 0 ; $student_id<= 5; $student_id++){	?>
+  	<!-- line about learnpaths -->
+				<table id="studentmodule" class="data_table">
+					<tr>
+						<th>
+							<?php echo get_lang('Learnpaths');?>
+						</th>
+						<th>
+							<?php
+
+		echo get_lang('Time');
+		/*Display :: display_icon('info3.gif', get_lang('TotalTimeByCourse'), array (
+			'align' => 'absmiddle',
+			'hspace' => '3px'
+		));*/
+?>
+						</th>
+						<th>
+							<?php
+
+		echo get_lang('Score');
+		/*Display :: display_icon('info3.gif', get_lang('LPTestScore'), array (
+			'align' => 'absmiddle',
+			'hspace' => '3px'
+		));*/
+?>
+						</th>
+						<th>
+							<?php
+
+		echo get_lang('Progress');
+		/*Display :: display_icon('info3.gif', get_lang('LPProgressScore'), array (
+			'align' => 'absmiddle',
+			'hspace' => '3px'
+		));*/
+?>
+						</th>
+						<th>
+							<?php
+
+		echo get_lang('LastConnexion');
+		/*Display :: display_icon('info3.gif', get_lang('LastTimeTheCourseWasUsed'), array (
+			'align' => 'absmiddle',
+			'hspace' => '3px'
+		));*/
+?>
+						</th>
+						<th>
+							<?php echo get_lang('Details');?>
+						</th>
+					</tr>
+<?php
+
+		$headerLearnpath = array (
+			get_lang('Learnpath'),
+			get_lang('Time'),
+			get_lang('Progress'),
+			get_lang('LastConnexion')
+		);
+
+		$t_lp = Database :: get_course_table(TABLE_LP_MAIN, $info_course['db_name']);
+		$t_lpi = Database :: get_course_table(TABLE_LP_ITEM, $info_course['db_name']);
+		$t_lpv = Database :: get_course_table(TABLE_LP_VIEW, $info_course['db_name']);
+		$t_lpiv = Database :: get_course_table(TABLE_LP_ITEM_VIEW, $info_course['db_name']);
+
+		$tbl_stats_exercices = Database :: get_statistic_table(TABLE_STATISTIC_TRACK_E_EXERCICES);
+		$tbl_stats_attempts = Database :: get_statistic_table(TABLE_STATISTIC_TRACK_E_ATTEMPT);
+		$tbl_quiz_questions = Database :: get_course_table(TABLE_QUIZ_QUESTION, $info_course['db_name']);
+
+		$sql_learnpath = "	SELECT lp.name,lp.id
+							FROM $t_lp AS lp ORDER BY lp.name ASC";
+
+		$result_learnpath = Database::query($sql_learnpath, __FILE__, __LINE__);
+
+		$csv_content[] = array ();
+		$csv_content[] = array (
+			get_lang('Learnpath', ''),
+			get_lang('Time', ''),
+			get_lang('Score', ''),
+			get_lang('Progress', ''),
+			get_lang('LastConnexion', '')
+		);
+
+		if (Database :: num_rows($result_learnpath) > 0) {
+			$i = 0;
+			while ($learnpath = Database :: fetch_array($result_learnpath)) {
+				$any_result = false;
+				$progress = learnpath :: get_db_progress($learnpath['id'], $student_id, '%', $info_course['db_name'], true);
+				if ($progress === null) {
+					$progress = '0%';
+				} else {
+					$any_result = true;
+				}
+
+				// calculates time
+				$sql = 'SELECT SUM(total_time)
+												FROM ' . $t_lpiv . ' AS item_view
+												INNER JOIN ' . $t_lpv . ' AS view
+													ON item_view.lp_view_id = view.id
+													AND view.lp_id = ' . $learnpath['id'] . '
+													AND view.user_id = ' . intval($_GET['student']);
+				$rs = Database::query($sql, __FILE__, __LINE__);
+				$total_time = 0;
+				if (Database :: num_rows($rs) > 0) {
+					$total_time = Database :: result($rs, 0, 0);
+					if ($total_time > 0)
+						$any_result = true;
+				}
+
+				// calculates last connection time
+				$sql = 'SELECT MAX(start_time)
+												FROM ' . $t_lpiv . ' AS item_view
+												INNER JOIN ' . $t_lpv . ' AS view
+													ON item_view.lp_view_id = view.id
+													AND view.lp_id = ' . $learnpath['id'] . '
+													AND view.user_id = ' . intval($_GET['student']);
+				$rs = Database::query($sql, __FILE__, __LINE__);
+				$start_time = null;
+				if (Database :: num_rows($rs) > 0) {
+					$start_time = Database :: result($rs, 0, 0);
+					if ($start_time > 0)
+						$any_result = true;
+				}
+
+				//QUIZZ IN LP
+				$score = Tracking :: get_avg_student_score(intval($_GET['student']), Database :: escape_string($_GET['course']), array (
+					$learnpath['id']
+				));
+
+				if (empty ($score)) {
+					$score = 0;
+				}
+				if ($i % 2 == 0) {
+					$css_class = "row_odd";
+				} else {
+					$css_class = "row_even";
+				}
+
+				$i++;
+
+				$csv_content[] = array (
+					api_html_entity_decode(stripslashes($learnpath['name']), ENT_QUOTES, $charset),
+					api_time_to_hms($total_time),
+					$score . '%',
+					$progress,
+					date('Y-m-d', $start_time)
+				);
+?>
+					<tr class="<?php echo $css_class;?>">
+						<td>
+							<?php echo stripslashes($learnpath['name']); ?>
+						</td>
+						<td align="center">
+						<?php echo api_time_to_hms($total_time) ?>
+						</td>
+						<td align="center">
+							<?php
+
+							if (!is_null($score)) {
+								echo $score . '%';
+							} else {
+								echo '-';
+							}
+?>
+						</td>
+						<td align="center">
+							<?php echo $progress ?>
+						</td>
+						<td align="center">
+							<?php
+				if ($start_time != '' && $start_time > 0) {
+					echo format_locale_date(get_lang('DateFormatLongWithoutDay'), $start_time);
+				} else {
+					echo '-';
+				}
+?>
+						</td>
+						<td align="center">
+							<?php
+				if ($any_result === true) {
+					$from = '';
+					if ($from_myspace) {
+						$from ='&from=myspace';
+					}
+?>
+					<a href="charts/learnpath.ajax.php?width=900&height=500&cidReq=<?php echo $course_code_info; ?>&course=<?php echo $course_code_info ?>&lp_id=<?php echo $learnpath['id'] ?>&user_id=<?php echo intval($_GET['student']) ?>" class="thickbox" title="<?php echo sprintf(get_lang('CompareUsersOnLearnpath'),$learnpath['name']) ?>">
+						<?php echo Display::return_icon('pixel.gif',get_lang('AccessDetails'), array('class' => 'actionplaceholdericon actionstatistics')) ?>
+					</a>
+					<a href="lp_tracking.php?cidReq=<?php echo Security::remove_XSS($_GET['course']); ?>&course=<?php $course ?>&origin=<?php echo Security::remove_XSS($_GET['origin']) ?>&lp_id=<?php echo $learnpath['id']?>&student_id=<?php echo $info_user['user_id'] ?>">
+						<?php echo Display::return_icon('pixel.gif',get_lang('AccessDetails'), array('class' => 'actionplaceholdericon actionstatisticsdetails')) ?>
+					</a>
+					<?php
+				}
+?>
+						</td>
+					</tr>
+				<?php
+				$data_learnpath[$i][] = $learnpath['name'];
+				$data_learnpath[$i][] = $progress . '%';
+				$i++;
+			}
+		} else {
+			echo "	<tr>
+										<td colspan='6'>
+											" . get_lang('NoLearnpath') . "
+										</td>
+									</tr>
+								 ";
+		}
+?>
+				</table>
+        <?php
+ ///------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------     
+// 		if (api_is_allowed_to_edit()) {
+// 				  echo '<script language="JavaScript" type="text/javascript">
+//                 function a(){
+//                   $("iframe#frm").contents().find("table#studentmodule tbody").clone().appendTo("#a");
+//                 }
+//                 </script>   
+//           <iframe id="frm" src="../myspace/mystudents.php?student=3&details=true&course=backup" name="Name" width="960px" seamless="true" height="900px">
+//           content if browser does not support
+//           </iframe>
+//           <div id="a"></div>';
+// 				}
+ ?>
 	
 	<!-- list of courses -->
-	
-	
+<?php	
+} }
+?>	
 </div><!--end of div#content-->
 
 <?php
