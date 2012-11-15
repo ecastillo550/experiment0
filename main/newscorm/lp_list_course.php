@@ -30,6 +30,29 @@ require_once api_get_path(LIBRARY_PATH).'course.lib.php';
 require_once api_get_path(SYS_CODE_PATH).'newscorm/learnpath.class.php';
 require_once api_get_path(SYS_CODE_PATH).'mySpace/myspace.lib.php';
 
+$htmlHeadXtra[] = '<!--[if IE]><script language="javascript" type="text/javascript" src="'.api_get_path(WEB_LIBRARY_PATH).'javascript/jqplot/excanvas.js"></script><![endif]-->';
+$htmlHeadXtra[] = '<script type="text/javascript" src="'.api_get_path(WEB_LIBRARY_PATH).'javascript/thickbox.js"></script>';
+$htmlHeadXtra[] = '<script type="text/javascript" src="'.api_get_path(WEB_LIBRARY_PATH).'javascript/jqplot/jquery.jqplot.min.js"></script>';
+$htmlHeadXtra[] = '<script type="text/javascript" src="'.api_get_path(WEB_LIBRARY_PATH).'javascript/jqplot/plugins/jqplot.barRenderer.min.js"></script>';
+$htmlHeadXtra[] = '<script type="text/javascript" src="'.api_get_path(WEB_LIBRARY_PATH).'javascript/jqplot/plugins/jqplot.pointLabels.min.js"></script>';
+$htmlHeadXtra[] = '<script type="text/javascript" src="'.api_get_path(WEB_LIBRARY_PATH).'javascript/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"></script>';
+$htmlHeadXtra[] = '<script type="text/javascript" src="'.api_get_path(WEB_LIBRARY_PATH).'javascript/jqplot/plugins/jqplot.cursor.min.js"></script>';
+$htmlHeadXtra[] = '<script type="text/javascript" src="'.api_get_path(WEB_LIBRARY_PATH).'javascript/jqplot/plugins/jqplot.dateAxisRenderer.min.js"></script>';
+$htmlHeadXtra[] = '<script type="text/javascript" src="'.api_get_path(WEB_LIBRARY_PATH).'javascript/jquery-ui/js/jquery-ui-1.8.1.custom.min.js"></script>';
+$htmlHeadXtra[] = '<link rel="stylesheet" href="'.api_get_path(WEB_LIBRARY_PATH).'javascript/thickbox.css" type="text/css" media="screen" />';
+$htmlHeadXtra[] = '<link rel="stylesheet" type="text/css" href="'.api_get_path(WEB_LIBRARY_PATH).'javascript/jqplot/jquery.jqplot.css" />';
+$htmlHeadXtra[] = '<link rel="stylesheet" type="text/css" href="'.api_get_path(WEB_LIBRARY_PATH).'javascript/jquery-ui/css/overcast/jquery-ui-1.8.1.custom.css" />';
+
+$htmlHeadXtra[] = '<script type="text/javascript">
+
+function show_image(image,width,height) {
+	width = parseInt(width) + 20;
+	height = parseInt(height) + 20;
+	window_x = window.open(image,\'windowX\',\'width=\'+ width + \', height=\'+ height + \'\');
+}
+
+</script>';
+
 
 // setting the tabs
 $this_section=SECTION_COURSES;
@@ -306,6 +329,9 @@ $a_students = CourseManager :: get_student_list_from_course_code($_course['id'],
 $nbStudents = count($a_students);
 $course = $_GET['cidReq'];
 
+$info_user['name'] = api_get_person_name($info_user['firstname'], $info_user['lastname']);
+$info_user = UserManager :: get_user_info_by_id($student_id);
+
 // gets course actual administrators
 		$sql = "SELECT user.user_id FROM $table_user user, $TABLECOURSUSER course_user
 			WHERE course_user.user_id=user.user_id AND course_user.course_code='".api_get_course_id()."' AND course_user.status <> '1' ";
@@ -322,12 +348,19 @@ if (api_is_allowed_to_edit()) {
 $course_info = CourseManager :: get_course_information($get_course_code);
 
 
-for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $student_id_counterloop++){	?>
+for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $student_id_counterloop++){	
+    $info_user = UserManager :: get_user_info_by_id($student_ids[$student_id_counterloop]); 
+    $info_user['name'] = api_get_person_name($info_user['firstname'], $info_user['lastname']); ?>
   	<!-- line about learnpaths -->
 				<table id="studentmodule" class="data_table">
+          <tr>
+              <td align="center" colspan="6">
+                  <span style="font-weight: bold; font-size: 20px;"><?php echo $info_user['name'];?></span>
+              </td>
+          </tr>
 					<tr>
 						<th>
-							<?php echo $student_ids[$student_id_counterloop] . get_lang('Learnpaths');?>
+							<?php echo get_lang('Learnpaths');?>
 						</th>
 						<th>
 							<?php
@@ -371,7 +404,7 @@ for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $stu
 						</th>
 						<th>
 							<?php echo get_lang('Details');?>
-						</th>
+						</th> 
 					</tr>
 <?php
 
@@ -422,7 +455,7 @@ for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $stu
 												INNER JOIN ' . $t_lpv . ' AS view
 													ON item_view.lp_view_id = view.id
 													AND view.lp_id = ' . $learnpath['id'] . '
-													AND view.user_id = ' . intval($_GET['student']);
+													AND view.user_id = ' . intval($student_ids[$student_id_counterloop]);
 				$rs = Database::query($sql, __FILE__, __LINE__);
 				$total_time = 0;
 				if (Database :: num_rows($rs) > 0) {
@@ -437,7 +470,7 @@ for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $stu
 												INNER JOIN ' . $t_lpv . ' AS view
 													ON item_view.lp_view_id = view.id
 													AND view.lp_id = ' . $learnpath['id'] . '
-													AND view.user_id = ' . intval($_GET['student']);
+													AND view.user_id = ' . intval($student_ids[$student_id_counterloop]);
 				$rs = Database::query($sql, __FILE__, __LINE__);
 				$start_time = null;
 				if (Database :: num_rows($rs) > 0) {
@@ -447,7 +480,7 @@ for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $stu
 				}
 
 				//QUIZZ IN LP
-				$score = Tracking :: get_avg_student_score(intval($_GET['student']), Database :: escape_string($_GET['course']), array (
+				$score = Tracking :: get_avg_student_score(intval($student_ids[$student_id_counterloop]), Database :: escape_string($course), array (
 					$learnpath['id']
 				));
 
@@ -507,10 +540,10 @@ for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $stu
 						$from ='&from=myspace';
 					}
 ?>
-					<a href="charts/learnpath.ajax.php?width=900&height=500&cidReq=<?php echo $course_code_info; ?>&course=<?php echo $course_code_info ?>&lp_id=<?php echo $learnpath['id'] ?>&user_id=<?php echo intval($_GET['student']) ?>" class="thickbox" title="<?php echo sprintf(get_lang('CompareUsersOnLearnpath'),$learnpath['name']) ?>">
+					<a href="../myspace/charts/learnpath.ajax.php?width=900&height=500&cidReq=<?php echo $course; ?>&course=<?php echo $course; ?>&lp_id=<?php echo $learnpath['id'] ?>&user_id=<?php echo intval($student_ids[$student_id_counterloop]) ?>" class="thickbox" title="<?php echo sprintf(get_lang('CompareUsersOnLearnpath'),$learnpath['name']) ?>">
 						<?php echo Display::return_icon('pixel.gif',get_lang('AccessDetails'), array('class' => 'actionplaceholdericon actionstatistics')) ?>
 					</a>
-					<a href="lp_tracking.php?cidReq=<?php echo Security::remove_XSS($_GET['cidReq']); ?>&course=<?php echo $course; ?>&origin=<?php echo "tracking_course"; ?>&lp_id=<?php echo $learnpath['id']?>&student_id=<?php echo $student_ids[$student_id_counterloop]; ?>">
+					<a href="../myspace/lp_tracking.php?cidReq=<?php echo Security::remove_XSS($_GET['cidReq']); ?>&course=<?php echo $course; ?>&origin=<?php echo "tracking_course"; ?>&lp_id=<?php echo $learnpath['id']?>&student_id=<?php echo $student_ids[$student_id_counterloop]; ?>">
 						<?php echo Display::return_icon('pixel.gif',get_lang('AccessDetails'), array('class' => 'actionplaceholdericon actionstatisticsdetails')) ?>
 					</a>
 					<?php
