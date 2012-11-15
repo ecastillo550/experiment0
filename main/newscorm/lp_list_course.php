@@ -23,6 +23,13 @@ require_once 'learnpath.class.php';
 require_once 'learnpathItem.class.php';
 require_once api_get_path(LIBRARY_PATH).'formvalidator/FormValidator.class.php';
 require_once api_get_path(LIBRARY_PATH).'certificatemanager.lib.php';
+require_once api_get_path(LIBRARY_PATH).'tracking.lib.php';
+require_once api_get_path(LIBRARY_PATH).'export.lib.inc.php';
+require_once api_get_path(LIBRARY_PATH).'usermanager.lib.php';
+require_once api_get_path(LIBRARY_PATH).'course.lib.php';
+require_once api_get_path(SYS_CODE_PATH).'newscorm/learnpath.class.php';
+require_once api_get_path(SYS_CODE_PATH).'mySpace/myspace.lib.php';
+
 
 // setting the tabs
 $this_section=SECTION_COURSES;
@@ -291,40 +298,36 @@ function savelporder(str)
 		{
 			echo '<div align="center"><a href="lp_controller.php?' . api_get_cidreq().'">'.get_lang('NoCourse').'</a></div>';
 		}
- ///------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------   
-    // Database Table Definitions
-$tbl_user = Database :: get_main_table(TABLE_MAIN_USER);
-$tbl_session_user = Database :: get_main_table(TABLE_MAIN_SESSION_USER);
-$tbl_session = Database :: get_main_table(TABLE_MAIN_SESSION);
-$tbl_session_course = Database :: get_main_table(TABLE_MAIN_SESSION_COURSE);
-$tbl_session_course_user = Database :: get_main_table(TABLE_MAIN_SESSION_COURSE_USER);
-$tbl_course = Database :: get_main_table(TABLE_MAIN_COURSE);
-$tbl_course_user = Database :: get_main_table(TABLE_MAIN_COURSE_USER);
-$tbl_stats_exercices = Database :: get_statistic_table(TABLE_STATISTIC_TRACK_E_EXERCICES);
-$tbl_stats_exercices_attempts = Database :: get_statistic_table(TABLE_STATISTIC_TRACK_E_ATTEMPT);
-//$tbl_course_lp_view = Database :: get_course_table(TABLE_LP_VIEW);
-//$tbl_course_lp_view_item = Database :: get_course_table(TABLE_LP_ITEM_VIEW);
-//$tbl_course_lp_item = Database :: get_course_table(TABLE_LP_ITEM);
+///------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------   
+// Nuevo modulo para desarrollo EP    
 
-$tbl_course_lp_view = 'lp_view';
-$tbl_course_lp_view_item = 'lp_item_view';
-$tbl_course_lp_item = 'lp_item';
-$tbl_course_lp = 'lp';
-$tbl_course_quiz = 'quiz';
-$course_quiz_question = 'quiz_question';
-$course_quiz_rel_question = 'quiz_rel_question';
-$course_quiz_answer = 'quiz_answer';
-$course_student_publication = Database :: get_course_table(TABLE_STUDENT_PUBLICATION);
+// getting all the students of the course
+$a_students = CourseManager :: get_student_list_from_course_code($_course['id'], true, (empty($_SESSION['id_session']) ? null : $_SESSION['id_session']));
+$nbStudents = count($a_students);
+$course = $_GET['cidReq'];
 
-$course = $_GET['cidreq'];
+// gets course actual administrators
+		$sql = "SELECT user.user_id FROM $table_user user, $TABLECOURSUSER course_user
+			WHERE course_user.user_id=user.user_id AND course_user.course_code='".api_get_course_id()."' AND course_user.status <> '1' ";
+		$res = Database::query($sql, __FILE__, __LINE__);
 
+		$student_ids = array();
+
+		while($row = Database::fetch_row($res)) {
+			$student_ids[] = $row[0];
+		}
+		$count_students = count($student_ids);
+    
 if (api_is_allowed_to_edit()) { 
-for($student_id = 0 ; $student_id<= 5; $student_id++){	?>
+$course_info = CourseManager :: get_course_information($get_course_code);
+
+
+for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $student_id_counterloop++){	?>
   	<!-- line about learnpaths -->
 				<table id="studentmodule" class="data_table">
 					<tr>
 						<th>
-							<?php echo get_lang('Learnpaths');?>
+							<?php echo $student_ids[$student_id_counterloop] . get_lang('Learnpaths');?>
 						</th>
 						<th>
 							<?php
@@ -406,7 +409,7 @@ for($student_id = 0 ; $student_id<= 5; $student_id++){	?>
 			$i = 0;
 			while ($learnpath = Database :: fetch_array($result_learnpath)) {
 				$any_result = false;
-				$progress = learnpath :: get_db_progress($learnpath['id'], $student_id, '%', $info_course['db_name'], true);
+				$progress = learnpath :: get_db_progress($learnpath['id'], $student_ids[$student_id_counterloop], '%', $info_course['db_name'], true);
 				if ($progress === null) {
 					$progress = '0%';
 				} else {
@@ -507,7 +510,7 @@ for($student_id = 0 ; $student_id<= 5; $student_id++){	?>
 					<a href="charts/learnpath.ajax.php?width=900&height=500&cidReq=<?php echo $course_code_info; ?>&course=<?php echo $course_code_info ?>&lp_id=<?php echo $learnpath['id'] ?>&user_id=<?php echo intval($_GET['student']) ?>" class="thickbox" title="<?php echo sprintf(get_lang('CompareUsersOnLearnpath'),$learnpath['name']) ?>">
 						<?php echo Display::return_icon('pixel.gif',get_lang('AccessDetails'), array('class' => 'actionplaceholdericon actionstatistics')) ?>
 					</a>
-					<a href="lp_tracking.php?cidReq=<?php echo Security::remove_XSS($_GET['course']); ?>&course=<?php $course ?>&origin=<?php echo Security::remove_XSS($_GET['origin']) ?>&lp_id=<?php echo $learnpath['id']?>&student_id=<?php echo $info_user['user_id'] ?>">
+					<a href="lp_tracking.php?cidReq=<?php echo Security::remove_XSS($_GET['cidReq']); ?>&course=<?php echo $course; ?>&origin=<?php echo "tracking_course"; ?>&lp_id=<?php echo $learnpath['id']?>&student_id=<?php echo $student_ids[$student_id_counterloop]; ?>">
 						<?php echo Display::return_icon('pixel.gif',get_lang('AccessDetails'), array('class' => 'actionplaceholdericon actionstatisticsdetails')) ?>
 					</a>
 					<?php
