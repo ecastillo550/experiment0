@@ -66,10 +66,10 @@ $_configuration['user_personal_database']   			='dokeos_user';
 //============================================================================
 
 // URL to the root of your Dokeos installation, example: http://www.mydokeos.com/
-$_configuration['root_web'] 							= 'http://192.168.1.184/';
+$_configuration['root_web'] 							= 'http://172.16.100.72/';
 
 // Path to the webroot of system, example: /var/www/
-$_configuration['root_sys'] 							= 'C:/xampp/htdocs/';
+$_configuration['root_sys'] 							= 'C:/xampp/dep-vanilla/';
 
 // Path from your WWW-root to the root of your Dokeos installation, example: dokeos (this means dokeos is installed in /var/www/dokeos/
 $_configuration['url_append'] 							= '';
