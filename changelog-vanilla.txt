@@ -1,0 +1,2 @@
+Change log on database:
+1- Changed default value of quiz->type to 2.
