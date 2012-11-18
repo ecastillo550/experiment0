@@ -348,6 +348,13 @@ if (api_is_allowed_to_edit()) {
 $course_info = CourseManager :: get_course_information($get_course_code);
 
 
+for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $student_id_counterloop++){
+    $info_user = UserManager :: get_user_info_by_id($student_ids[$student_id_counterloop]); 
+    $info_user['name'] = api_get_person_name($info_user['firstname'], $info_user['lastname']);
+    echo $info_user['name'];
+}
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//loop for student detailed list
 for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $student_id_counterloop++){	
     $info_user = UserManager :: get_user_info_by_id($student_ids[$student_id_counterloop]); 
     $info_user['name'] = api_get_person_name($info_user['firstname'], $info_user['lastname']); ?>

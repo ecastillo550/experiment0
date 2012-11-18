@@ -107,7 +107,7 @@ $htmlHeadXtra[] = '<style type="text/css" media="all">@import "' . api_get_path(
 $htmlHeadXtra[] = '<style type="text/css" media="all">@import "' . api_get_path(WEB_LIBRARY_PATH) . 'javascript/dhtmlwindow.css";</style>';
 //$htmlHeadXtra[] = '<script type="text/javascript" src="'.api_get_path(WEB_LIBRARY_PATH).'javascript/jquery.tablednd_0_5.js"></script>';
 //$htmlHeadXtra[] = '<script src="'.api_get_path(WEB_LIBRARY_PATH).'javascript/jquery.ui.all.js" type="text/javascript" language="javascript"></script>';
-$htmlHeadXtra[] = '<script>
+$htmlHeadXtra[] = '<script>       
   $(document).ready(function (){
     $("div.label").attr("style","width: 100%;text-align:left");
     $("div.row").attr("style","width: 100%;");

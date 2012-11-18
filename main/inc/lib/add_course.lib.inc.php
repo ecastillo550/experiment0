@@ -649,7 +649,7 @@ function update_Db_course($courseDbName)
 		title varchar(200) NOT NULL,
 		description text default NULL,
 		sound varchar(50) default NULL,
-		type tinyint unsigned NOT NULL default 1,
+		type tinyint unsigned NOT NULL default 2,
 		random smallint(6) NOT NULL default 0,
 		active tinyint NOT NULL default 0,
 		results_disabled TINYINT UNSIGNED NOT NULL DEFAULT 0,
