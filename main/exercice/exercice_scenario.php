@@ -40,6 +40,8 @@ $htmlHeadXtra[] = '
 	}
     </style>
     <script language="javascript">
+        
+        
         $(document).ready(function(){
             
             $("input[name=\'randomQuestionsOpt\']").click(function(){

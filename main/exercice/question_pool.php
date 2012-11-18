@@ -119,7 +119,7 @@ if (!empty($_GET['type'])) {
 }
 
 // maximum number of questions on a same page
-$limitQuestPage = 10;
+$limitQuestPage = 1;
 
 // document path
 $documentPath = api_get_path(SYS_COURSE_PATH) . $_course['path'] . '/document';

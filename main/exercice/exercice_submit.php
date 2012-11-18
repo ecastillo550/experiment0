@@ -292,7 +292,7 @@ $TBL_EXERCICES = Database :: get_course_table(TABLE_QUIZ_TEST);
 $query = "SELECT type,feedback_type,expired_time FROM $TBL_EXERCICES WHERE id=$exerciseId";
 $result = api_sql_query($query, __FILE__, __LINE__);
 $exercise_row = Database :: fetch_array($result);
-$exerciseType = $exercise_row['type'];
+$exerciseType = 2;
 $exerciseFeedbackType = $exercise_row['feedback_type'];
 
 if(($exerciseFeedbackType == '3') && (!isset($_GET['action'])))

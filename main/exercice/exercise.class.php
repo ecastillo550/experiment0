@@ -42,7 +42,7 @@ if (!class_exists('Exercise')):
    $this->exercise = '';
    $this->description = '';
    $this->sound = '';
-   $this->type = 1;
+   $this->type = 2;
    $this->random = 0;
    $this->active = 1;
    $this->questionList = array();
@@ -84,6 +84,7 @@ if (!class_exists('Exercise')):
       $rs = Database::query($sql,__FILE__,__LINE__);
       $rowquiz = Database::fetch_object($rs);
       // Sql for create a new scenario
+      $rowquiz->type = 2;
       $sql_scenario = "INSERT INTO $TBL_EXERCICES_SCENARIO (exercice_id, scenario_type,
       title, description, sound, type, random, active, results_disabled,
       max_attempt, start_time, end_time, feedback_type,
@@ -113,7 +114,7 @@ if (!class_exists('Exercise')):
     $this->exercise = $object->title;
     $this->description = $object->description;
     $this->sound = $object->sound;
-    $this->type = $object->type;
+    $this->type = 2;
     $this->random = $object->random;
     $this->active = $object->active;
     $this->results_disabled = $object->results_disabled;
@@ -1044,13 +1045,13 @@ if (!class_exists('Exercise')):
     // defaults
     if (isset($_REQUEST['modifyExercise'])) {
         if ($this->id > 0) {
-            $defaults['exerciseType'] = $this->selectType();
+            $defaults['exerciseType'] = 2;
             $defaults['exerciseTitle'] = $this->selectTitle();
             $defaults['exerciseAttempts'] = $this->selectAttempts();
             $defaults['exerciseFeedbackType'] = $this->selectFeedbackType();
             //$defaults['exerciseScoreOption'] = $this->selectScorePass();
             //$defaults['quizType'] = $this->selectQuizType();
-            $defaults['quizType'] = 1;
+            $defaults['quizType'] = 2;
             $defaults['showScore'] = $this->selectResultsDisabled()?0:1;
             
             if ($this->random > $this->selectNbrQuestions()) {
@@ -1084,7 +1085,7 @@ if (!class_exists('Exercise')):
             $defaults['randomQuestions'] = 0;
             $defaults['exerciseFeedbackType'] = 3;
             $defaults['exerciseScoreOption'] = 50;
-            $defaults['quizType'] = 1;
+            $defaults['quizType'] = 2;
             $defaults['randomQuestionsOpt'] = 0;
             $defaults['start_time'] = date('Y-m-d 12:00:00');
             $defaults['end_time'] = date('Y-m-d 12:00:00', time() + 84600);
