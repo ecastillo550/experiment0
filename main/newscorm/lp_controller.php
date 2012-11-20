@@ -1116,4 +1116,7 @@ if(!empty($_SESSION['oLP'])){
 	$_SESSION['lpobject'] = serialize($_SESSION['oLP']);
 	if($debug>0) error_log('New LP - lpobject is serialized in session',0);
 }
+
+  //----------------------------------------------
+
 ?>

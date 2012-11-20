@@ -42,7 +42,7 @@ if ($origin == 'learnpath'){
 }
 
 // Database table definitions
-$TBL_EXERCICE_QUESTION 	= Database::get_course_table(TABLE_QUIZ_TEST_QUESTION);
+$TBL_EXERCICE_QUESTION 	= Database::get_course_table(TABLE_QUIZ_TEST_QUESTION); //quiz-rel-question
 $TBL_EXERCICES         	= Database::get_course_table(TABLE_QUIZ_TEST);
 $TBL_QUESTIONS         	= Database::get_course_table(TABLE_QUIZ_QUESTION);
 $TBL_REPONSES          	= Database::get_course_table(TABLE_QUIZ_ANSWER);

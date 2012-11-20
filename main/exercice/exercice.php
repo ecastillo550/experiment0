@@ -241,7 +241,8 @@ if ($_REQUEST['comments'] == 'update' && ($is_allowedToEdit || $is_tutor) && $_G
   $ques_name = Database::result($result, 0, "question");
 
   $query = "UPDATE $TBL_TRACK_ATTEMPT SET marks = '" . Database::escape_string($my_marks) . "',teacher_comment = '" . Database::escape_string($my_comments) . "'
-					  WHERE question_id = '" . Database::escape_string($my_questionid) . "'
+					  ,flag=1
+            WHERE question_id = '" . Database::escape_string($my_questionid) . "'
 					  AND exe_id='" . Database::escape_string($id) . "'";
   api_sql_query($query, __FILE__, __LINE__);
 

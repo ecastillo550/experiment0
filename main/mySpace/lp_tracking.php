@@ -29,8 +29,11 @@ require_once api_get_path(LIBRARY_PATH).'export.lib.inc.php';
 
 $export_csv = isset($_GET['export']) && $_GET['export'] == 'csv' ? true : false;
 if ($export_csv) {
-	ob_start();
+	ob_start();   
 }
+
+
+
 $csv_content = array();
 $user_id = intval($_GET['student_id']);
 
@@ -149,15 +152,20 @@ echo '<div id="content">';
 
 $list = learnpath :: get_flat_ordered_items_list($lp_id);
 $origin = 'tracking';
+
+
 if ($export_csv) {
 	include_once api_get_path(SYS_CODE_PATH).'newscorm/lp_stats.php';
+
 	//Export :: export_table_csv($csv_content, 'reporting_student');
 } else {
+  
 	ob_start();
 	include_once  api_get_path(SYS_CODE_PATH).'newscorm/lp_stats.php';
 	$tracking_content = ob_get_contents();
 	ob_end_clean();
 	echo api_utf8_decode($tracking_content, $charset);
+  echo "<script type='text/javascript'>alert('$charset');</script>";
 }
 
 // ending div#content
