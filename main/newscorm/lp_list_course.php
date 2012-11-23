@@ -358,9 +358,9 @@ if (Database :: num_rows($res) > 0) {
 	$view = $myrow[0];
 }
 
-$t_lpv = Database :: get_course_table(TABLE_LP_VIEW, $info_course['db_name']);
-$t_lpiv = Database :: get_course_table(TABLE_LP_ITEM_VIEW, $info_course['db_name']);
-$t_lpi = Database :: get_course_table(TABLE_LP_ITEM, $info_course['db_name']);
+$t_lp_view = Database :: get_course_table(TABLE_LP_VIEW, $info_course['db_name']);
+$t_lp_item = Database :: get_course_table(TABLE_LP_ITEM, $info_course['db_name']);
+
 
 for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $student_id_counterloop++){
     $info_user = UserManager :: get_user_info_by_id($student_ids[$student_id_counterloop]); 
@@ -370,7 +370,7 @@ for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $stu
     $sql_needsgrading = "SELECT DISTINCT exercices.exe_id, exercices.exe_user_id, exercices.exe_result, lpiv.total_time
 ,exercices.exe_exo_id
 FROM dokeos_stats.track_e_attempt AS attempt, dokeos_stats.track_e_exercices AS exercices,
-dokeos_backup.lp_view As lpv, dokeos_backup.lp_item As lpi, dokeos_backup.lp_item_view as lpiv
+$t_lp_view As lpv, $t_lp_item As lpi, $TBL_LP_ITEM_VIEW as lpiv
 WHERE exercices.exe_id = attempt.exe_id
 AND
 lpv.id=lpiv.lp_view_id
@@ -379,21 +379,15 @@ lpi.id=lpiv.lp_item_id
 AND
 lpv.user_id=exercices.exe_user_id
 AND lpiv.score=exercices.exe_result
-AND attempt.flag =1
+AND attempt.flag =0
 AND lpv.user_id=".$student_ids[$student_id_counterloop] ;
 
     $query_needsgrading = Database::query($sql_needsgrading,__FILE__,__LINE__);
     $num_needsgrading = Database :: num_rows($query_needsgrading);
     
     while ($row_needsgrading = Database :: fetch_array($query_needsgrading)) {
-    echo  
-    
-    "<a href='../exercice/exercise_show.php?origin=tracking_course&myid=1&my_lp_id=4&id=".$row_needsgrading['exe_id']."&cidReq=BACKUP&student=".$row_needsgrading['exe_user_id']."&total_time=".$row_needsgrading['total_time']."&my_exe_exo_id=".$row_needsgrading['exe_exo_id']."'>".
-    $row_needsgrading['exe_id'].
-     '<img title="Show and mark attempt" alt="Show and mark attempt" src="http://192.168.0.139/main/img/quiz.gif">'
-    ."
-    
-    </a><br>";
+    echo  "<a href='../exercice/exercise_show.php?origin=tracking_course&myid=1&id=".$row_needsgrading['exe_id']."&cidReq=$course&student=".$row_needsgrading['exe_user_id']."&total_time=".$row_needsgrading['total_time']."&my_exe_exo_id=".$row_needsgrading['exe_exo_id']."'>".
+    $row_needsgrading['exe_id'].'  <img title="Show and mark attempt" alt="Show and mark attempt" src="../../main/img/quiz.gif">'."</a><br>";
     }
 }
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
