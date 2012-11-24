@@ -101,7 +101,8 @@ CREATE TABLE track_e_exercices (
   exe_weighting float(6,2) NOT NULL default 0,
   PRIMARY KEY  (exe_id),
   KEY exe_user_id (exe_user_id),
-  KEY exe_cours_id (exe_cours_id)
+  KEY exe_cours_id (exe_cours_id),
+  flag tinyint(1) NOT NULL default 0
 );
 
 ALTER TABLE track_e_exercices ADD status varchar(20) NOT NULL default '';
