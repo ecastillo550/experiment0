@@ -18,10 +18,12 @@ class AnnouncementManager  {
 	 */
 	public static function get_all_annoucement_by_course($course_db, $session = 0) {
 		if (empty($course_db)) {
+    
 			return false;
 		}
 		$tbl_announcement	= Database::get_course_table(TABLE_ANNOUNCEMENT, $course_db['db_name']);
 		$tbl_item_property  = Database::get_course_table(TABLE_ITEM_PROPERTY, $course_db['db_name']);
+    
 		/*
 		if (empty($group_id)) {
 			$group_condition = "AND (toolitemproperties.to_group_id='0' OR toolitemproperties.to_group_id is null)";
@@ -30,12 +32,12 @@ class AnnouncementManager  {
 		}
 		$group_condition
 		*/
-			
+	
 		$sql="SELECT DISTINCT announcement.id, announcement.title, announcement.content
-				FROM $tbl_announcement announcement, $tbl_item_property toolitemproperties
+				FROM $tbl_announcement as announcement, $tbl_item_property as toolitemproperties
 				WHERE announcement.id = toolitemproperties.ref
 				AND toolitemproperties.tool='announcement'				
-				AND announcement.session_id  = '$session'
+				AND announcement.session_id  = 0
 				ORDER BY display_order DESC";
 		$rs = Database::query($sql);
 		$num_rows = Database::num_rows($rs);
@@ -43,7 +45,7 @@ class AnnouncementManager  {
 		if ($num_rows>0) {
 			$list = array();
 			while ($row = Database::fetch_array($rs)) {
-				$list[] = $row;		
+				$list[] = $row;	
 			}		
 			return $list;
 		}		

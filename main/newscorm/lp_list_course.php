@@ -364,7 +364,7 @@ $t_lp_item = Database :: get_course_table(TABLE_LP_ITEM, $info_course['db_name']
 //-----------------------------------------------------
 //Comenzar tabla para revisiones
 //-----------------------------------------------------
-echo "<table id='studentmodule' class='data_table' style='margin-top: 15px;'>";
+echo "<table id='studentmodule' class='data_table' style='margin-top: 15px;'> ";
 for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $student_id_counterloop++){
     $info_user = UserManager :: get_user_info_by_id($student_ids[$student_id_counterloop]); 
     $info_user['name'] = api_get_person_name($info_user['firstname'], $info_user['lastname']);
@@ -396,7 +396,7 @@ GROUP BY exercices.exe_id';
                    " . $row_needsgrading['title'] . " 
                 </td>
                 <td>
-                 <a href='../exercice/exercise_show.php?origin=tracking_course&myid=1&id=".$row_needsgrading['exe_id']."&cidReq=$course&student=".$row_needsgrading['exe_user_id']."&total_time=".$row_needsgrading['total_time']."&my_exe_exo_id=".$row_needsgrading['exe_exo_id']."'>".
+                 <a href='../exercice/exercise_show.php?origin=tracking_course&myid=".api_get_user_id()."&id=".$row_needsgrading['exe_id']."&cidReq=$course&student=".$row_needsgrading['exe_user_id']."&total_time=".$row_needsgrading['total_time']."&my_exe_exo_id=".$row_needsgrading['exe_exo_id']."'>".
                     $row_needsgrading['exe_id'].'  <img title="Show and mark attempt" alt="Show and mark attempt" src="../../main/img/quiz.gif">'."</a><br>
                 </td>
             </tr>";

@@ -38,7 +38,7 @@ if (isset($_GET['action']) && in_array($_GET['action'],$actions)) {
 $announcementId = isset($_GET['id']) && is_numeric($_GET['id'])?intval($_GET['id']):null;
 
 // announcement controller object
-$announcementController = new AnnouncementController($announcementId);
+$announcementController = new AnnouncementController($announcementId);  
 
 // distpacher actions to controller
 switch ($action) {	
@@ -59,5 +59,5 @@ switch ($action) {
 		break;
 	default:	
 		$announcementController->listing();
-}
+}                           
 ?>

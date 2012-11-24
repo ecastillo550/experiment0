@@ -1,3 +1,6 @@
 Change log on database:
 1- Changed default value of quiz->type to 2.
 2- Flag added on track_e_attempt , default 0
+
+
+Assignments -> Student-publication table
