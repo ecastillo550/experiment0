@@ -1330,7 +1330,7 @@ if ($limit_time_exists) {
  }
 }
 //-------------------------------------------------------------------------------------------------------------------
-// IF EP style
+// IF EP style $ReachedMaxAttempts
 
 if($ReachedMaxAttempts != 1){
 // The user did not allow the test to start yet

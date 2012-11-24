@@ -165,7 +165,6 @@ if ($export_csv) {
 	$tracking_content = ob_get_contents();
 	ob_end_clean();
 	echo api_utf8_decode($tracking_content, $charset);
-  echo "<script type='text/javascript'>alert('$charset');</script>";
 }
 
 // ending div#content

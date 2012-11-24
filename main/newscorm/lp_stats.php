@@ -692,10 +692,11 @@ if (is_array($list) && count($list) > 0){
 								$my_exo_exe_id=$row_attempts['exe_exo_id'];
 								$mktime_start_date = convert_mysql_date($row_attempts['start_date']);
 								$mktime_exe_date = convert_mysql_date($row_attempts['exe_date']);
-								$mytime = ((int)$mktime_exe_date-(int)$mktime_start_date);
+                $mytime = ((int)$mktime_exe_date-(int)$mktime_start_date);
+                
 								$time_attemp = learnpathItem :: get_scorm_time('js', $mytime);
 								$time_attemp = str_replace('NaN', '00' . $h . '00\'00"', $time_attemp);
-
+                
 								if (!$is_allowed_to_edit && $result_disabled_ext_all) {
 									$view_score =  '-';
 								} else {
@@ -712,10 +713,11 @@ if (is_array($list) && count($list) > 0){
 									}
 									//$view_score = ($my_score == 0 ? '0.00/'.$my_maxscore : ($my_maxscore == 0 ? $my_score : $my_score . '/' . $my_maxscore));
 								}
-
+                if(((int)$mktime_exe_date-(int)$mktime_start_date) > 0){
 								$output .= '<tr class="'.$oddclass.'" ><td>&nbsp;</td><td>'.$extend_attempt_link.'</td><td colspan="3">' . api_convert_encoding(get_lang('Attempt'), $lp_charset, $dokeos_charset) . ' ' . $n . '</td>'
 							 			. '<td colspan="2"><font color="' . $color . '"><div class="mystatus">' . $my_lesson_status . '</div></font></td><td colspan="2"><div class="mystatus" align="center">' . $view_score  . '</div></td><td colspan="2"><div class="mystatus">' . $time_attemp . '</div></td>';
-							 	if ($origin != 'tracking') {
+							 	
+                 if ($origin != 'tracking') {
 							 		if (!$is_allowed_to_edit && $result_disabled_ext_all) {
 										$output .= '<td><img src="' . api_get_path(WEB_IMG_PATH) . 'quiz_na.gif" alt="'.api_convert_encoding(get_lang('ShowAttempt'), $lp_charset, $dokeos_charset).'" title="'.api_convert_encoding(get_lang('ShowAttempt'), $lp_charset, $dokeos_charset).'"></td>';
 									} else {
@@ -727,11 +729,14 @@ if (is_array($list) && count($list) > 0){
 									} else {
 										$output .= '<td><a href="../exercice/exercise_show.php?origin=tracking_course&myid='.$my_orig_lp.'&my_lp_id='.$my_orig_lp_item.'&id=' . $my_exe_id . '&cidReq=' . $course_code . '&student=' . $student_id . '&total_time='.$mytime.'&my_exe_exo_id='.$my_exo_exe_id.$from_link.' " target="_parent"><img src="' . api_get_path(WEB_IMG_PATH) . 'quiz.gif" alt="'.api_convert_encoding(get_lang('ShowAndQualifyAttempt'), $lp_charset, $dokeos_charset).'" title="'.api_convert_encoding(get_lang('ShowAndQualifyAttempt'), $lp_charset, $dokeos_charset).'"></a></td>';
 									}
+                  
 
 								}
 							 	$output .= '</tr>';
+                
 								$n++;
-							}
+                }
+              }
 						}
 						$output .= '<tr><td colspan="12">&nbsp;</td></tr>';
 					}

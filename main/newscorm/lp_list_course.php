@@ -361,35 +361,50 @@ if (Database :: num_rows($res) > 0) {
 $t_lp_view = Database :: get_course_table(TABLE_LP_VIEW, $info_course['db_name']);
 $t_lp_item = Database :: get_course_table(TABLE_LP_ITEM, $info_course['db_name']);
 
-
+//-----------------------------------------------------
+//Comenzar tabla para revisiones
+//-----------------------------------------------------
+echo "<table id='studentmodule' class='data_table' style='margin-top: 15px;'>";
 for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $student_id_counterloop++){
     $info_user = UserManager :: get_user_info_by_id($student_ids[$student_id_counterloop]); 
     $info_user['name'] = api_get_person_name($info_user['firstname'], $info_user['lastname']);
-    echo $info_user['name'] . "<br>";
     
     $sql_needsgrading = "SELECT DISTINCT exercices.exe_id, exercices.exe_user_id, exercices.exe_result, lpiv.total_time
-,exercices.exe_exo_id
+,exercices.exe_exo_id, lpi.title
 FROM dokeos_stats.track_e_attempt AS attempt, dokeos_stats.track_e_exercices AS exercices,
 $t_lp_view As lpv, $t_lp_item As lpi, $TBL_LP_ITEM_VIEW as lpiv
 WHERE exercices.exe_id = attempt.exe_id
-AND
-lpv.id=lpiv.lp_view_id
-AND
-lpi.id=lpiv.lp_item_id
-AND
-lpv.user_id=exercices.exe_user_id
+AND lpv.id=lpiv.lp_view_id
+AND lpi.id=lpiv.lp_item_id
+AND lpv.user_id=exercices.exe_user_id
 AND lpiv.score=exercices.exe_result
 AND attempt.flag =0
-AND lpv.user_id=".$student_ids[$student_id_counterloop] ;
+AND exercices.status= \"\"
+AND lpv.user_id=".$student_ids[$student_id_counterloop].' 
+GROUP BY exercices.exe_id';
 
     $query_needsgrading = Database::query($sql_needsgrading,__FILE__,__LINE__);
     $num_needsgrading = Database :: num_rows($query_needsgrading);
     
-    while ($row_needsgrading = Database :: fetch_array($query_needsgrading)) {
-    echo  "<a href='../exercice/exercise_show.php?origin=tracking_course&myid=1&id=".$row_needsgrading['exe_id']."&cidReq=$course&student=".$row_needsgrading['exe_user_id']."&total_time=".$row_needsgrading['total_time']."&my_exe_exo_id=".$row_needsgrading['exe_exo_id']."'>".
-    $row_needsgrading['exe_id'].'  <img title="Show and mark attempt" alt="Show and mark attempt" src="../../main/img/quiz.gif">'."</a><br>";
+
+ while ($row_needsgrading = Database :: fetch_array($query_needsgrading)) {    
+      echo  "<tr class='row_odd'>
+                 <td>
+                   " . $info_user['name'] . " 
+                </td>
+                <td>
+                   " . $row_needsgrading['title'] . " 
+                </td>
+                <td>
+                 <a href='../exercice/exercise_show.php?origin=tracking_course&myid=1&id=".$row_needsgrading['exe_id']."&cidReq=$course&student=".$row_needsgrading['exe_user_id']."&total_time=".$row_needsgrading['total_time']."&my_exe_exo_id=".$row_needsgrading['exe_exo_id']."'>".
+                    $row_needsgrading['exe_id'].'  <img title="Show and mark attempt" alt="Show and mark attempt" src="../../main/img/quiz.gif">'."</a><br>
+                </td>
+            </tr>";
     }
+    
 }
+echo '</table>' ;
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //loop for student detailed list
 for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $student_id_counterloop++){	
