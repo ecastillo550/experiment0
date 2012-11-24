@@ -1286,6 +1286,7 @@ if ($exerciseAttempts > 0) {
    echo "<script> $('#wrapper-clock').hide();</script>";  
    echo '<br/><br/>';
    Display :: display_warning_message(sprintf(get_lang('ReachedMaxAttempts'), $exerciseTitle, $exerciseAttempts), false, true);
+   $ReachedMaxAttempts = 1;
    if($arr_user['status']!=1){
     //echo "<script> $('#wrapper-clock').hide();</script>";
    }
@@ -1328,7 +1329,10 @@ if ($limit_time_exists) {
   }
  }
 }
+//-------------------------------------------------------------------------------------------------------------------
+// IF EP style
 
+if($ReachedMaxAttempts != 1){
 // The user did not allow the test to start yet
 if ($lock_quiz_access === true) {
     exit;
@@ -1508,4 +1512,5 @@ echo '<div style="display:none;" id="expiredTimeMsg">';
 echo '<center><img src="'.api_get_path(WEB_PATH).'main/img/01time.png" style="vertical-align:text-bottom;margin-bottom: 20px; margin-top: 35px;"><br/>'.get_lang('TimeOfQuizIsOver').'</center><br/>'; 
 echo '<center><a href="'.api_get_path(WEB_COURSE_PATH).$_GET['cidReq'].'/index.php">'.get_lang('TimeOfQuizOverMsg').'</a><br/></center>'; 
 echo '</div>';
+}
 }
