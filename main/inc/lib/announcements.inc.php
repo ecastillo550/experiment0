@@ -75,8 +75,21 @@ class AnnouncementManager  {
 	 * @param array the course array
 	 * @param int 	the announcement id
 	 */	
-	public static function delete_announcement($_course, $id) {	
+	public static function delete_announcement($_course, $id) {
+  $tbl_announcement = Database::get_course_table(TABLE_ANNOUNCEMENT, $_course['db_name']);	
+    Database::query("DELETE FROM $tbl_announcement  WHERE id= $id");
+    //it only updates item property... 
 		api_item_property_update($_course, TOOL_ANNOUNCEMENT, $id, 'delete', api_get_user_id());
+	}
+  
+  /**
+	 * Deletes an attatchment entry
+	 * @param array the course array
+	 * @param int 	the announcement id
+	 */	
+	public static function delete_attatchment_entry($_course, $id) {
+  $tbl_announcement_attachment = Database::get_course_table(TABLE_ANNOUNCEMENT_ATTACHMENT, $_course['db_name']);	
+    Database::query("DELETE FROM $tbl_announcement_attachment  WHERE announcement_id= $id");
 	}
 	
 	/**
@@ -134,10 +147,46 @@ class AnnouncementManager  {
 	
 		echo "<table height=\"100\" width=\"100%\" border=\"1\" cellpadding=\"5\" cellspacing=\"0\" id=\"agenda_list\">";
 		echo "<tr class=\"data\"><td>" . $title . "</td></tr>";
-		echo "<tr><td class=\"announcements_datum\">" . get_lang('AnnouncementPublishedOn') . " : " . api_convert_and_format_date($last_post_datetime, null, date_default_timezone_get()) . "</td></tr>";
+		echo "<tr><td class=\"announcements_datum\">" . get_lang('AnnouncementPublishedOn') . " : " . $last_post_datetime . "</td></tr>";
 		echo "<tr class=\"text\"><td>$content</td></tr>";
 		echo "</table>";
 	}	
+  
+  /**
+	* Displays one specific announcement on an array
+	* @param $announcement_id, the id of the announcement you want to display
+	*/
+	public static function display_announcement_array($announcement_id) {	
+		if ($announcement_id != strval(intval($announcement_id))) { return false; } // potencial sql injection
+	
+		$tbl_announcement 	= Database::get_course_table(TABLE_ANNOUNCEMENT);
+		$tbl_item_property	= Database::get_course_table(TABLE_ITEM_PROPERTY);
+	
+		if (api_get_user_id() != 0) {
+			$sql_query = "	SELECT announcement.*, toolitemproperties.*
+							FROM $tbl_announcement announcement, $tbl_item_property toolitemproperties
+							WHERE announcement.id = toolitemproperties.ref
+							AND announcement.id = '$announcement_id'
+							AND toolitemproperties.tool='announcement'
+							AND (toolitemproperties.to_user_id='".api_get_user_id()."' OR toolitemproperties.to_group_id='0')
+							AND toolitemproperties.visibility='1'
+							ORDER BY display_order DESC";
+	
+		} else {
+			$sql_query = "	SELECT announcement.*, toolitemproperties.*
+							FROM $tbl_announcement announcement, $tbl_item_property toolitemproperties
+							WHERE announcement.id = toolitemproperties.ref
+							AND announcement.id = '$announcement_id'
+							AND toolitemproperties.tool='announcement'
+							AND toolitemproperties.to_group_id='0'
+							AND toolitemproperties.visibility='1'";
+		}
+		$sql_result = Database::query($sql_query);
+		$result		= Database::fetch_array($sql_result);
+
+	
+		return  $result;
+	}
 	
 		
 	/**

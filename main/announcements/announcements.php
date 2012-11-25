@@ -129,14 +129,17 @@ switch ($action) {
 
                 $attachment_icon = '';
                 if (count($attachment_list)>0) {
-                   echo ' <a href="'.api_get_path(WEB_COURSE_PATH).api_get_course_path().'/upload/announcements/'.$attachment_list['path'].'">'.Display::return_icon('attachment.gif','Attachment') . '</a><br>';               
+                   echo ' <a href="'.api_get_path(WEB_COURSE_PATH).api_get_course_path().'/upload/announcements/'.$attachment_list['path'].'" target="_blank">'.Display::return_icon('attachment.gif','Attachment') . '</a><br>';               
                 }
-         echo '<hr>';   
+         if(api_is_allowed_to_edit()){
+             echo '<a href="announcements.php?action=edit&cidReq='.api_get_course_path().'&announcement-id='.$announcementslist[$count][0].'">modificar </a> <br>';
+             echo '<a href="announcements.php?action=delete&cidReq='.api_get_course_path().'&announcement-id='.$announcementslist[$count][0].'">eliminar </a> <hr>';
+         }   
         }
-
         	    
 		break;
 	case 'add':
+  if(api_is_allowed_to_edit()){
       if(isset($_GET['posto']) && $_GET['posto'] == 'yes'){
       $emailTitle = $_POST['emailtitle'];
       $newContent = $_POST['content'];
@@ -150,7 +153,7 @@ switch ($action) {
       AnnouncementManager::add_announcement($emailTitle, $newContent, $order, $to, $file, $file_comment=''); 
       
       } else {
-      echo "<form action='announcements.php?posto=yes&action=add&cidReq=backup' method='post' enctype='multipart/form-data'>
+      echo "<form action='announcements.php?posto=yes&action=add&cidReq=".api_get_course_path()."' method='post' enctype='multipart/form-data'>
       Titulo del anuncio <input type='text' value='' name='emailtitle'><div style='width: 900px; position: relative;'>" ;
       
       $oFCKeditor = new FCKeditor('content') ;
@@ -158,18 +161,60 @@ switch ($action) {
       $oFCKeditor->Value = '' ; 
       $oFCKeditor->Create() ;
       
-      echo '</div><input type="file" name="user_upload" size="50"> <input type="submit" value="Submit"> </form>' ;
+      echo '</div><input type="file" name="user_upload" size="50"><br> <input type="submit" value="Submit"> </form>' ;
 		   //$addAnnouncement = AnnouncementManager::add_announcement($emailTitle, $newContent, $order, $to, $file = array(), $file_comment='');
        }
+    }
 		break;
 	case 'view':
 		
 		break;
 	case 'edit':
-		$AnnouncementManager->edit();
+      if(api_is_allowed_to_edit()){
+      $announcement_id = $_GET['announcement-id'];
+		  if(isset($_GET['modsto']) && $_GET['modsto'] == 'yes'){
+      $emailTitle = $_POST['emailtitle'];
+      $newContent = $_POST['content'];
+      $file = $_FILES['user_upload'];
+
+        AnnouncementManager::edit_announcement($announcement_id, $emailTitle, $newContent, $to, $file, $file_comment=''); 
+        if(isset($_POST['delete_file']) && $_POST['delete_file'] == 'yes'){
+              AnnouncementManager::delete_attatchment_entry(api_get_course_info(), $announcement_id);
+              echo 'eliminado';
+          }        
+      
+      } else {
+      
+      $announcement = array();
+      $announcement = AnnouncementManager::display_announcement_array($announcement_id);
+      
+      echo "<form action='announcements.php?modsto=yes&action=edit&cidReq=".api_get_course_path()."&announcement-id=".$announcement_id."' method='post' enctype='multipart/form-data'>
+      Titulo del anuncio <input type='text' value='".$announcement['title']."' name='emailtitle'><div style='width: 900px; position: relative;'>" ;
+      $oFCKeditor = new FCKeditor('content') ;
+      $oFCKeditor->BasePath = '/fckeditor/' ;
+      $oFCKeditor->Value = ''.$announcement['content'] ; 
+      $oFCKeditor->Create() ;
+      
+      echo '</div><input type="file" name="user_upload" size="50"> <br> Borrar Archivo<input type="checkbox" name="delete_file" value="yes"> <br><input type="submit" value="Submit"> </form>' ;
+		   //$addAnnouncement = AnnouncementManager::add_announcement($emailTitle, $newContent, $order, $to, $file = array(), $file_comment='');
+       }
+    }
 		break;
-	case 'delete':	
-		$AnnouncementManager->destroy();
+	case 'delete':
+      if(api_is_allowed_to_edit()){
+      $announcement_id = $_GET['announcement-id'];
+      if(isset($_GET['eliminar']) && $_GET['eliminar'] == 'yes'){
+          AnnouncementManager::delete_announcement(api_get_course_info(), $announcement_id);
+          echo 'eliminado';
+          
+      }	else {
+      
+      $announcement = array();
+      $announcement = AnnouncementManager::display_announcement($announcement_id);
+      echo "<form action='announcements.php?eliminar=yes&action=delete&cidReq=".api_get_course_path()."&announcement-id=".$announcement_id."' method='post' enctype='multipart/form-data'>";
+      echo '<input type="submit" value="Eliminar"> </form>' ;
+      }
+		 }
 		break;
 	default:	
 		$AnnouncementManager->listing();
