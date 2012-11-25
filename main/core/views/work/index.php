@@ -21,6 +21,11 @@ require_once '../../../newscorm/learnpathItem.class.php';
 
 // additional javascript
 $htmlHeadXtra[] = '<script type="text/javascript" src="' . api_get_path(WEB_LIBRARY_PATH) . 'javascript/jquery-1.4.2.min.js" language="javascript"></script>';
+$htmlHeadXtra[] = '<script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script><script>
+  $(document).ready(function(){
+    $("#submit_paper").validate();
+    });
+</script> ';
 
 $add_lp_param = "";
 if (isset($_GET['lp_id']) && $_GET['lp_id'] > 0) {

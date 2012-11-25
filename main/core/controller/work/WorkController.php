@@ -163,7 +163,10 @@ class WorkController extends Controller {
 			}
 			$this->model->save_submit_work($cur_dir_path);	
 			
-			$this->listing();	
+//			$this->listing();
+// ----------------------------------------------------
+// Hardlink para evitar mostrar lista
+      header('Location: '.api_get_path(WEB_PATH).'main/core/views/work/index.php?'.api_get_cidreq().'&action=view_papers&assignment_id='.$_POST['assignment_id'] );	
 		}
 		else {
 			$this->model->assignment_id		 = $this->assignmentId;

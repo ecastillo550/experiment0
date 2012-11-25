@@ -567,8 +567,7 @@ class WorkModel
 				}
 				document.getElementById("file_upload").value=temp[temp.length-1];
 			}
-		function getAssignmentId(id){
-        alert("did it");			
+		function getAssignmentId(id){			
 				document.getElementById("assignment_id").value=id;
 		}
 		</script>';
@@ -594,11 +593,11 @@ class WorkModel
 			$assignments[$obj->id] = $obj->title;
 		} 
 			
-		$form->addElement('select', 'assignment', get_lang('AssignmentName'), $assignments,'');	
+		$form->addElement('select', 'assignment', get_lang('AssignmentName'), $assignments,'style="visibility:hidden"');	
 		$form->addElement('hidden','sec_token',$stok);
 		$form->addElement('hidden','assignment_id','','id="assignment_id"');
 		$form->addElement('hidden','default_assignment_id','','id="default_assignment_id"');
-		$form->addElement('file', 'file', get_lang('PaperUpload'), 'size="40" id="papper-file" onchange="updateDocumentTitle(this.value)"');
+		$form->addElement('file', 'file', get_lang('PaperUpload'), 'size="40" id="papper-file" onchange="updateDocumentTitle(this.value)" class="required"');
 		$form->addRule('file', get_lang('ThisFieldIsRequired'), 'uploadedfile');
 
 		$form->addElement('text', 'title', get_lang("TitleWork"), 'id="file_upload"  style="width: 350px;"');
