@@ -8726,8 +8726,8 @@ class learnpath {
             $return .= '</div>';
         }
         $return .= '<div class="lp_resource_element">';
-        $return.=Display::return_icon('pixel.gif','',array('class'=>'actionplaceholderminiicon actionnewdocweb','style'=>'margin-right:5px;','title'=>''));
-        $return .= '<a href="' . api_get_path(REL_CODE_PATH) . 'link/link.php?' . api_get_cidreq() . '&action=addlink&lp_id=' . $this->lp_id . '" title="' . $linkadd_lang_var . '">' . $linkadd_lang_var . '</a>';
+        //$return.=Display::return_icon('pixel.gif','',array('class'=>'actionplaceholderminiicon actionnewdocweb','style'=>'margin-right:5px;','title'=>''));
+        //$return .= '<a href="' . api_get_path(REL_CODE_PATH) . 'link/link.php?' . api_get_cidreq() . '&action=addlink&lp_id=' . $this->lp_id . '" title="' . $linkadd_lang_var . '">' . $linkadd_lang_var . '</a>';
         $return .= '</div>';
 
         if (Database :: num_rows($res_link) == 0)
@@ -8797,8 +8797,8 @@ class learnpath {
         }
         $return .= '<br/>';
         $return .= '<div class="lp_resource_element">';
-        $return.=Display::return_icon('pixel.gif','',array('class'=>'actionplaceholdericon actionnewlist','style'=>'margin-right:5px;','title'=>''));
-        $return .= '<a href="' . api_get_path(REL_CODE_PATH) . 'forum/index.php?' . api_get_cidreq() . '&action=add&amp;content=forum&lp_id=' . $this->lp_id . '" title="' . api_convert_encoding(get_lang('CreateANewForum')) . '">' . api_convert_encoding(get_lang('CreateANewForum'), $charset, api_get_system_encoding()) . '</a>';
+        //$return.=Display::return_icon('pixel.gif','',array('class'=>'actionplaceholdericon actionnewlist','style'=>'margin-right:5px;','title'=>''));
+        //$return .= '<a href="' . api_get_path(REL_CODE_PATH) . 'forum/index.php?' . api_get_cidreq() . '&action=add&amp;content=forum&lp_id=' . $this->lp_id . '" title="' . api_convert_encoding(get_lang('CreateANewForum')) . '">' . api_convert_encoding(get_lang('CreateANewForum'), $charset, api_get_system_encoding()) . '</a>';
 
         $return .= '</div>';
         $return .= '</div>';
@@ -8850,8 +8850,8 @@ class learnpath {
         }
         $return .= '<br/>';
         $return .= '<div class="lp_resource_element">';
-        $return.=Display::return_icon('pixel.gif','',array('class'=>'actionplaceholdericon actionnewlist','style'=>'margin-right:5px;','title'=>''));
-        $return .= '<a href="' . api_get_path(REL_CODE_PATH) . 'survey/create_new_survey.php?' . api_get_cidreq() . '&action=add&lp_id=' . $this->lp_id . '" title="' . $newsurvey_lang_var . '">' . $newsurvey_lang_var . '</a>';
+        //$return.=Display::return_icon('pixel.gif','',array('class'=>'actionplaceholdericon actionnewlist','style'=>'margin-right:5px;','title'=>''));
+        //$return .= '<a href="' . api_get_path(REL_CODE_PATH) . 'survey/create_new_survey.php?' . api_get_cidreq() . '&action=add&lp_id=' . $this->lp_id . '" title="' . $newsurvey_lang_var . '">' . $newsurvey_lang_var . '</a>';
         $return .= '</div>';
 
         $return .= '</div>';
@@ -8899,8 +8899,8 @@ class learnpath {
         }
 
         $return .= '<div class="lp_resource_element">';
-        $return.=Display::return_icon('pixel.gif','',array('class'=>'actionplaceholdericon actionnewlist','alt'=>"' . $newassignment_lang_var . '",'style'=>'margin-right:5px;','title'=>"' . $newassignment_lang_var . '"));
-        $return .= '<a href="../work/work.php?cidReq=' . Security :: remove_XSS($_GET['cidReq']) . '&amp;toolgroup=&curdirpath=/&createdir=1&origin=&gradebook=type=' . TOOL_STUDENTPUBLICATION . '&amp;lp_id=' . $this->lp_id . '">' . $newassignment_lang_var . '</a>';
+        //$return.=Display::return_icon('pixel.gif','',array('class'=>'actionplaceholdericon actionnewlist','alt'=>"' . $newassignment_lang_var . '",'style'=>'margin-right:5px;','title'=>"' . $newassignment_lang_var . '"));
+        //$return .= '<a href="../work/work.php?cidReq=' . Security :: remove_XSS($_GET['cidReq']) . '&amp;toolgroup=&curdirpath=/&createdir=1&origin=&gradebook=type=' . TOOL_STUDENTPUBLICATION . '&amp;lp_id=' . $this->lp_id . '">' . $newassignment_lang_var . '</a>';
         $return .= '</div>';
 
         $return .= '</div>';
