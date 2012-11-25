@@ -1099,4 +1099,5 @@ class AnnouncementManager  {
 		// update item_property
 		//api_item_property_update($_course, 'announcement_attachment',  $id,'AnnouncementAttachmentDeleted', api_get_user_id());
 	}
+  
 } //end class

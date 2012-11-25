@@ -44,9 +44,11 @@ require_once '../inc/global.inc.php';
 //---------------------------------------------------------
 
 require_once api_get_path(LIBRARY_PATH).'announcements.inc.php';
+include_once api_get_path(LIBRARY_PATH)."fckeditor/fckeditor.php";
 
 require_once api_get_path(LIBRARY_PATH).'formvalidator/FormValidator.class.php';
 require_once api_get_path(LIBRARY_PATH).'tracking.lib.php';
+require_once api_get_path(LIBRARY_PATH).'fileUpload.lib.php';
 
 // Incomming variables
 $course_db['db_name'] = Database::get_current_course_database();
@@ -101,7 +103,7 @@ $tool = TOOL_ANNOUNCEMENT;
 // Display
 echo '<div class="actions">';
 if(api_is_allowed_to_edit()){
-   echo '<a href="index.php?'.api_get_cidreq().'&action=add">'.Display::return_icon('pixel.gif', get_lang('AddAnnouncement'), array('class' => 'toolactionplaceholdericon toolactionannoucement')).get_lang('AddAnnouncement').'</a>';
+   echo '<a href="announcements.php?'.api_get_cidreq().'&action=add">'.Display::return_icon('pixel.gif', get_lang('AddAnnouncement'), array('class' => 'toolactionplaceholdericon toolactionannoucement')).get_lang('AddAnnouncement').'</a>';
 }
 echo '</div>';
 
@@ -111,20 +113,57 @@ echo '<div id="content">';
 // distpacher actions to controller
 switch ($action) {	
 	case 'listing':
+
         $announcementslist = array();
         $announcementslist = AnnouncementManager::get_all_annoucement_by_course($course_db);
-        for ($count = 0 ; $count <= count($announcementslist) ; $count++){
-            for ($innercount = 0 ; $innercount <= count($announcementslist) ; $innercount++){
+        // $count = rows
+        // $innercount = elements
+        
+        for ($count = 0 ; $count < count($announcementslist) ; $count++){
+            for ($innercount = 0 ; $innercount < count($announcementslist) ; $innercount++){
                 echo $announcementslist[$count][$innercount] . "<br>";
-            }
+                }
+                // show attachment list
+                $attachment_list = array();
+                $attachment_list = AnnouncementManager::get_attachment($announcementslist[$count][0]);
+
+                $attachment_icon = '';
+                if (count($attachment_list)>0) {
+                   echo ' <a href="'.api_get_path(WEB_COURSE_PATH).api_get_course_path().'/upload/announcements/'.$attachment_list['path'].'">'.Display::return_icon('attachment.gif','Attachment') . '</a><br>';               
+                }
+         echo '<hr>';   
         }
+
         	    
 		break;
 	case 'add':
-		$AnnouncementManager->add();
+      if(isset($_GET['posto']) && $_GET['posto'] == 'yes'){
+      $emailTitle = $_POST['emailtitle'];
+      $newContent = $_POST['content'];
+      $file = $_FILES['user_upload'];
+      echo   $emailTitle;
+      echo   $newContent;
+      echo   $file;
+      
+      
+      
+      AnnouncementManager::add_announcement($emailTitle, $newContent, $order, $to, $file, $file_comment=''); 
+      
+      } else {
+      echo "<form action='announcements.php?posto=yes&action=add&cidReq=backup' method='post' enctype='multipart/form-data'>
+      Titulo del anuncio <input type='text' value='' name='emailtitle'><div style='width: 900px; position: relative;'>" ;
+      
+      $oFCKeditor = new FCKeditor('content') ;
+      $oFCKeditor->BasePath = '/fckeditor/' ;
+      $oFCKeditor->Value = '' ; 
+      $oFCKeditor->Create() ;
+      
+      echo '</div><input type="file" name="user_upload" size="50"> <input type="submit" value="Submit"> </form>' ;
+		   //$addAnnouncement = AnnouncementManager::add_announcement($emailTitle, $newContent, $order, $to, $file = array(), $file_comment='');
+       }
 		break;
 	case 'view':
-		$AnnouncementManager->showannouncement($announcementId);
+		
 		break;
 	case 'edit':
 		$AnnouncementManager->edit();
