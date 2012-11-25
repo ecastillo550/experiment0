@@ -388,6 +388,7 @@ GROUP BY exercices.exe_id';
     
 
  while ($row_needsgrading = Database :: fetch_array($query_needsgrading)) {    
+      $user_id = api_get_user_id();
       echo  "<tr class='row_odd'>
                  <td>
                    " . $info_user['name'] . " 
@@ -396,7 +397,7 @@ GROUP BY exercices.exe_id';
                    " . $row_needsgrading['title'] . " 
                 </td>
                 <td>
-                 <a href='../exercice/exercise_show.php?origin=tracking_course&myid=".api_get_user_id()."&id=".$row_needsgrading['exe_id']."&cidReq=$course&student=".$row_needsgrading['exe_user_id']."&total_time=".$row_needsgrading['total_time']."&my_exe_exo_id=".$row_needsgrading['exe_exo_id']."'>".
+                 <a href='../exercice/exercise_show.php?origin=tracking_course&myid=". $user_id ."&id=".$row_needsgrading['exe_id']."&cidReq=$course&student=".$row_needsgrading['exe_user_id']."&total_time=".$row_needsgrading['total_time']."&my_exe_exo_id=".$row_needsgrading['exe_exo_id']."'>".
                     $row_needsgrading['exe_id'].'  <img title="Show and mark attempt" alt="Show and mark attempt" src="../../main/img/quiz.gif">'."</a><br>
                 </td>
             </tr>";

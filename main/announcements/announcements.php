@@ -226,5 +226,5 @@ echo '</div>';
 echo '<div class="actions"> </div>';
 
 // Footer
-Display :: display_footer();
+Display :: display_footer(); 
 ?>

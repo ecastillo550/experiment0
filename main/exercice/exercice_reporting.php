@@ -144,7 +144,6 @@ if ($_configuration['tracking_enabled']) {
    }
    if ($_GET['gradebook'] == 'view') {
     $exercise_where_query = 'te.exe_exo_id =ce.id AND ';
-    echo "<script type='text/javascript'>alert('juju');</script>";
    }
 
    $sql = "SELECT CONCAT(lastname,' ',firstname) as users, ce.title, te.exe_result ,

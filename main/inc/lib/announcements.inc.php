@@ -34,7 +34,7 @@ class AnnouncementManager  {
 		*/
 	
 		$sql="SELECT DISTINCT announcement.id, announcement.title, announcement.content
-				FROM $tbl_announcement as announcement, $tbl_item_property as toolitemproperties
+				FROM $tbl_announcement announcement, $tbl_item_property toolitemproperties
 				WHERE announcement.id = toolitemproperties.ref
 				AND toolitemproperties.tool='announcement'				
 				AND announcement.session_id  = 0

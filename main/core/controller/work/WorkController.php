@@ -155,7 +155,8 @@ class WorkController extends Controller {
 		if (strtoupper($_SERVER['REQUEST_METHOD']) == "POST") {				
 			$this->model->summary			 = $_POST['summary'];
 			if(empty($_POST['assignment_id'])){			
-				$this->model->assignment_id		 = $_POST['default_assignment_id'];
+				exit;
+        //$this->model->assignment_id		 = $_POST['default_assignment_id'];
 			}
 			else {
 				$this->model->assignment_id		 = $_POST['assignment_id'];

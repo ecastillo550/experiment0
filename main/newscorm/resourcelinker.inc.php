@@ -1882,7 +1882,12 @@ function rl_get_resource_link_for_learnpath($course_code, $learnpath_id, $id_in_
 			break;
 
 		case "assignments":
-			$link .= $main_dir_path.'work/work.php?origin='.$origin;
+    
+    
+			$link .= $main_dir_path.'work/work.php?origin='.$origin;    
+      
+      
+         
 			break;
 		case TOOL_DROPBOX:
 			$link .= $main_dir_path.'dropbox/index.php?origin=learnpath';
@@ -1900,12 +1905,15 @@ function rl_get_resource_link_for_learnpath($course_code, $learnpath_id, $id_in_
 			$link .= $main_dir_path.'user/user.php?origin='.$origin;
 			break;
 		case 'student_publication' :
+    ///-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //       EP STYLE
+    ///-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 			$tbl_work = Database::get_course_table(TABLE_STUDENT_PUBLICATION);
-   $sql = "SELECT url FROM ".$tbl_work." WHERE id = '".$id."'";
+   $sql = "SELECT * FROM ".$tbl_work." WHERE id = '".$id."'";
    $rs = Database::query($sql, __FILE__, __LINE__);
    $row = Database::fetch_array($rs);
    $curdirpath = substr($row['url'], 1);
-			$link .= $main_dir_path.'work/work.php?'.api_get_cidreq().'&origin=learnpath&gradebook=&curdirpath='.$curdirpath;
+			$link .= $main_dir_path.'work/work.php?'.api_get_cidreq().'&origin=learnpath&gradebook=&curdirpath='.$curdirpath.'&action=view_papers&assignment_id='.$row['id'];
 			break;
 		case TOOL_SURVEY :
    if (api_is_allowed_to_edit ()) {

@@ -264,6 +264,8 @@ class WorkModel
 
 		if(!in_array($_REQUEST['action'], array('submit_work', 'new_assignment'))){
 			if($no_of_assignment > 0){
+//-------------------------------------------------------------------------------------------------------------
+//aux_id      
 				$action_icons .= "<a href=\"".api_get_self()."?".api_get_cidreq()."&curdirpath=".$cur_dir_path."&action=submit_work&amp;display_upload_form=true&amp;origin=".$origin."&amp;gradebook=".$gradebook.(isset($assignmentId)?'&assignment_id='.intval($assignmentId):'')."\">".Display::return_icon('pixel.gif',get_lang('UploadADocument'),array('class' => 'toolactionplaceholdericon toolactionupload')). get_lang("UploadADocument") .'</a>';
 			}
 		}
@@ -565,7 +567,8 @@ class WorkModel
 				}
 				document.getElementById("file_upload").value=temp[temp.length-1];
 			}
-		function getAssignmentId(id){			
+		function getAssignmentId(id){
+        alert("did it");			
 				document.getElementById("assignment_id").value=id;
 		}
 		</script>';
@@ -580,7 +583,7 @@ class WorkModel
 			$my_cur_dir_path = $my_cur_dir_path . '/';
 		}
 
-		$form = new FormValidator('submit_paper', 'post',api_get_self().'?'.api_get_cidReq().'&action=submit_work&curdirpath='. rtrim(Security :: remove_XSS($cur_dir_path),'/').'&assignment_id='.$this->assignment_id.'&done=Y&display_upload_form=true&origin='.$origin.'&gradebook='.Security::remove_XSS($_GET['gradebook']),'', 'enctype="multipart/form-data"');
+		$form = new FormValidator('submit_paper', 'post',api_get_self().'?'.api_get_cidReq().'&action=submit_work&curdirpath='. rtrim(Security :: remove_XSS($cur_dir_path),'/').'&assignment_id='.$this->assignment_id.'&done=Y&display_upload_form=true&origin='.$origin.'&gradebook='.Security::remove_XSS($_GET['gradebook']),'', 'enctype="multipart/form-data" onsubmit="getAssignmentId(assignment.value)"');
 		$form->addElement('header', '', get_lang('SubmitPaper'));
 		$sql = "SELECT id,title FROM {$this->tableAssignment} WHERE filetype='folder' AND parent_id='0'";
 		$res = Database::query($sql,__FILE__,__LINE__);
@@ -589,9 +592,9 @@ class WorkModel
 		while($obj = Database::fetch_object($res))
 		{
 			$assignments[$obj->id] = $obj->title;
-		}
+		} 
 			
-		$form->addElement('select', 'assignment', get_lang('AssignmentName'), $assignments,'onchange="getAssignmentId(this.value)"');	
+		$form->addElement('select', 'assignment', get_lang('AssignmentName'), $assignments,'');	
 		$form->addElement('hidden','sec_token',$stok);
 		$form->addElement('hidden','assignment_id','','id="assignment_id"');
 		$form->addElement('hidden','default_assignment_id','','id="default_assignment_id"');
