@@ -475,7 +475,7 @@ class learnpath {
             $rsQuiz = Database::query($sql, __FILE__, __LINE__);
             $max_score = Database :: result($rsQuiz, 0, 0);
         } else {
-            $max_score = 100;
+            $max_score = 20;
         }
 
         if ($prerequisites != 0) {

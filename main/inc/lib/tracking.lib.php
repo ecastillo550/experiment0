@@ -581,6 +581,11 @@ class Tracking {
 								//$score_of_scorm_calculate = round($score_of_scorm_calculate/count($lp_list),2);
 								if ($debug) echo '<h2>All lps fix: '.$score_of_scorm_calculate.'</h2>';
 							}
+//               
+//               $sql = "SELECT"
+//               $lp_item_view_table
+//               
+//               
 							return $score_of_scorm_calculate;
 						} else {
 							if ($debug) var_dump($global_result, $lp_with_quiz);

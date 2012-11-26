@@ -8,6 +8,9 @@
  * @package dokeos.learnpath
  * @author Yannick Warnier
  */
+global $Assignments_score ;
+global $Assignments_score_counter ;
+global $quiz_score_counter ;
 
 require_once('learnpath.class.php');
 //require_once('scorm.class.php');
@@ -610,10 +613,17 @@ if (is_array($list) && count($list) > 0){
 							$output .=  '/';
 						} else {
 							$output .= ($score == 0 ? '0/'.float_format($maxscore, 1) : ($maxscore == 0 ? $score : float_format($score, 1) . '/' . float_format($maxscore, 1)));
+              $quiz_score_counter+=  $maxscore;
 						}
 
 					 } else {
 					    $output .= ($score == 0 ? '/' : ($maxscore == 0 ? $score : $score . '/' . $maxscore));
+//---------------------------------------------------  
+            if ($row['item_type'] == 'student_publication'){
+              $Assignments_score_counter += $maxscore; 
+            }
+            $Assignments_score +=  $score;
+            
 					 }
 					 $output .= "</div></td>\n" . '<td colspan="2"><div class="mystatus">' . $time . "</div></td><td>$correct_test_link</td>\n";
 					 $output .= "</tr>\n";
@@ -776,7 +786,9 @@ $total_time = learnpathItem :: get_scorm_time('js', $total_time);
 $total_time = str_replace('NaN', '00' . $h . '00\'00"', $total_time);
 $lp_type = learnpath :: get_type_static($lp_id);
 $total_percent = 0;
-$final_score = $total_score.'%';
+$total_score = (((($total_score * $quiz_score_counter) /100) + $Assignments_score)/($quiz_score_counter + $Assignments_score_counter))*100;
+$final_score = $total_score .'%';
+
 
 if (($counter % 2) == 0) {
 	$oddclass = "row_odd";
@@ -786,7 +798,7 @@ if (($counter % 2) == 0) {
 
 if (empty($extend_all)) {
 	$output .= "<tr class='$oddclass'>\n" . "<td></td>\n" . '<td colspan="4"><div class="mystatus"><i>' . api_convert_encoding(get_lang('AccomplishedStepsTotal') , $lp_charset, $dokeos_charset) . "</i></div></td>\n"
- 			. '<td colspan="2"></td>' . "\n" . '<td colspan="2"><div class="mystatus" align="center">' . $final_score . "</div></td>\n" . '<td colspan="2"><div class="mystatus">' . $total_time . '</div></td><td></td>' . "\n" . "</tr>\n";
+ 			. '<td colspan="2"></td>' . "\n" . '<td colspan="2"><div class="mystatus" align="center">' . $final_score .  "</div></td>\n" . '<td colspan="2"><div class="mystatus">' . $total_time . '</div></td><td></td>' . "\n" . "</tr>\n";
 }
 
 $output .= "</table></td></tr></table>";

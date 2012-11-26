@@ -579,8 +579,8 @@ class WorkModel
 		if ($my_cur_dir_path == '/') {
 			$my_cur_dir_path = '';
 		} elseif (substr($my_cur_dir_path, -1, 1) != '/') {
-			$my_cur_dir_path = $my_cur_dir_path . '/';
-		}
+			$my_cur_dir_path = $my_cur_dir_path . '/';    
+		}               
 
 		$form = new FormValidator('submit_paper', 'post',api_get_self().'?'.api_get_cidReq().'&action=submit_work&curdirpath='. rtrim(Security :: remove_XSS($cur_dir_path),'/').'&assignment_id='.$this->assignment_id.'&done=Y&display_upload_form=true&origin='.$origin.'&gradebook='.Security::remove_XSS($_GET['gradebook']),'', 'enctype="multipart/form-data" onsubmit="getAssignmentId(assignment.value)"');
 		$form->addElement('header', '', get_lang('SubmitPaper'));
@@ -650,6 +650,24 @@ class WorkModel
 			$my_cur_dir_path = $my_cur_dir_path . '/';
 		}
 		$is_course_member = CourseManager::is_user_subscribed_in_real_or_linked_course(api_get_user_id(), $_course['sysCode'],api_get_session_id());
+    $var = 0;
+    $LOCK = false;
+    $sql = "SELECT parent_id FROM {$this->tableAssignment} WHERE user_id=".$_user['user_id']." ORDER BY parent_id ASC" ;
+		$res = Database::query($sql,__FILE__,__LINE__);
+    $num_res = Database :: num_rows($res);
+    while ($var_query = Database :: fetch_array($res)){
+    
+        
+        $varaux = $var_query[0];
+        $var = $varaux;
+            if(($var == $varaux) && ($varaux == $this->assignment_id)){
+                $LOCK = true;
+            }   
+        
+    }  
+
+    
+    if(!$LOCK){
 
 		if ((!empty($_FILES['file']['size']) && !empty($is_course_member)) || api_is_platform_admin()) {	
 			
@@ -694,7 +712,7 @@ class WorkModel
 											   sent_date	=  NOW(),
 											   weight       = '".$weight."',
 											   parent_id 	=  '".$this->assignment_id ."' ,
-	                                           session_id = ".api_get_session_id();
+	                                           session_id = ".api_get_session_id().", user_id =".$_user['user_id'];
 					
 					Database::query($sql_add_publication, __FILE__, __LINE__);
 
@@ -730,7 +748,8 @@ class WorkModel
 					$user_id = api_get_user_id();
 					$this->sendmail_paper_to_tutor($authors,$Id,$user_id,$title,$assignment_title,$assignment_description,$deadline);	
 				}
-			}		
+			}
+      }		
 	}
 
 	public function getPapersTable() {
@@ -1171,12 +1190,32 @@ class WorkModel
                             WHERE id = ".$this->paper_id;
                     Database::query($sql, __FILE__, __LINE__);			
                     $this->sendmail_correctpaper_tostudent($this->paper_id,$assignmentInfo['parent_id'],$assignmentInfo['title'],$assignmentInfo['sent_date']);
-		}*/
+		}*/         $score = $this->score;
                 $sql = "UPDATE {$this->tableAssignment} SET remark = '".$this->remark."',
                             qualification = ".$this->score.",
                             qualificator_id = 1										   
                             WHERE id = ".$this->paper_id;
-                Database::query($sql, __FILE__, __LINE__);			
+                Database::query($sql, __FILE__, __LINE__);
+                
+//---------------------------------------------------------
+//  EP saving on lp
+//---------------------------------------------------------		
+                $t_lp_item = Database :: get_course_table(TABLE_LP_ITEM, $info_course['db_name']);
+                $t_lp_item_view = Database :: get_course_table(TABLE_LP_ITEM_VIEW, $info_course['db_name']);	
+//We get the line we want to change the score                
+                $sql_FIRST = "SELECT $t_lp_item_view.id FROM $t_lp_item_view INNER JOIN  $t_lp_item INNER JOIN  {$this->tableAssignment} ON $t_lp_item.id=$t_lp_item_view.lp_item_id 
+                AND $t_lp_item.path={$this->tableAssignment}.parent_id AND $t_lp_item.item_type='student_publication' AND {$this->tableAssignment}.user_id=
+                ".$assignmentInfo['user_id']." AND {$this->tableAssignment}.id=".$this->paper_id;
+                          
+                $sql_FIRST_raw = Database::query($sql_FIRST, __FILE__, __LINE__);
+                $sql_FIRST_fetch = Database::fetch_array($sql_FIRST_raw);
+                
+                $sql_SECOND = "UPDATE $t_lp_item_view SET score = $score								   
+                              WHERE id = ".$sql_FIRST_fetch[0] ;
+                              
+                Database::query($sql_SECOND, __FILE__, __LINE__);
+
+
                 $this->sendmail_correctpaper_tostudent($this->paper_id,$assignmentInfo['parent_id'],$assignmentInfo['title'],$assignmentInfo['sent_date']);               
 	}
 

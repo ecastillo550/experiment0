@@ -113,15 +113,22 @@ echo '<div id="content">';
 // distpacher actions to controller
 switch ($action) {	
 	case 'listing':
-
+        echo "<div style='width:855px;margin-left: 35px;'>";
         $announcementslist = array();
         $announcementslist = AnnouncementManager::get_all_annoucement_by_course($course_db);
         // $count = rows
         // $innercount = elements
-        
+        echo "<table id=''  style='margin-top: 15px;'> ";
         for ($count = 0 ; $count < count($announcementslist) ; $count++){
-            for ($innercount = 0 ; $innercount < count($announcementslist) ; $innercount++){
-                echo $announcementslist[$count][$innercount] . "<br>";
+            for ($innercount = 1 ; $innercount < count($announcementslist) ; $innercount++){
+             echo  "<tr class='row_odd'>";
+              if($innercount == 1){
+                  echo '<b style="font-size: 18px;">' . $announcementslist[$count][$innercount] . '</b>';
+                  }
+              else{
+                  echo $announcementslist[$count][$innercount];
+                  }
+                 echo "<br>";
                 }
                 // show attachment list
                 $attachment_list = array();
@@ -129,14 +136,15 @@ switch ($action) {
 
                 $attachment_icon = '';
                 if (count($attachment_list)>0) {
-                   echo ' <a href="'.api_get_path(WEB_COURSE_PATH).api_get_course_path().'/upload/announcements/'.$attachment_list['path'].'" target="_blank">'.Display::return_icon('attachment.gif','Attachment') . '</a><br>';               
+                   echo ' <a href="'.api_get_path(WEB_COURSE_PATH).api_get_course_path().'/upload/announcements/'.$attachment_list['path'].'" target="_blank">'.Display::return_icon('attachment.gif','Attachment') . '</a><br><br><br>';               
                 }
          if(api_is_allowed_to_edit()){
-             echo '<a href="announcements.php?action=edit&cidReq='.api_get_course_path().'&announcement-id='.$announcementslist[$count][0].'">modificar </a> <br>';
-             echo '<a href="announcements.php?action=delete&cidReq='.api_get_course_path().'&announcement-id='.$announcementslist[$count][0].'">eliminar </a> <hr>';
+             echo '<a style="float: left;" href="announcements.php?action=edit&cidReq='.api_get_course_path().'&announcement-id='.$announcementslist[$count][0].'"><img src="'.api_get_path(WEB_PATH).'/main/img/edit_link.png" alt="modificar"> </a> ';
+             echo '<a style="margin-left: 10px;float: left;" href="announcements.php?action=delete&cidReq='.api_get_course_path().'&announcement-id='.$announcementslist[$count][0].'"><img src="'.api_get_path(WEB_PATH).'/main/img/delete_data.gif" alt="eliminar"> </a> <br><br><hr>';
          }   
         }
-        	    
+        echo '</tr></table>'; 
+      echo '</div>';  	    
 		break;
 	case 'add':
   if(api_is_allowed_to_edit()){

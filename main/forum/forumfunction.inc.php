@@ -1959,11 +1959,11 @@ function store_thread($values) {
 
 		send_notification_mails($last_thread_id,$reply_info);
 
-		session_unregister('formelements');
-		session_unregister('origin');
-		session_unregister('breadcrumbs');
-		session_unregister('addedresource');
-		session_unregister('addedresourceid');
+		api_session_unregister('formelements');
+		api_session_unregister('origin');
+		api_session_unregister('breadcrumbs');
+		api_session_unregister('addedresource');
+		api_session_unregister('addedresourceid');
 
 		echo '<div class="confirmation-message rounded">'.$message.'</div>';
 	} else {

@@ -360,6 +360,7 @@ if (Database :: num_rows($res) > 0) {
 
 $t_lp_view = Database :: get_course_table(TABLE_LP_VIEW, $info_course['db_name']);
 $t_lp_item = Database :: get_course_table(TABLE_LP_ITEM, $info_course['db_name']);
+$t_student_pub = Database :: get_course_table(TABLE_STUDENT_PUBLICATION, $info_course['db_name']);
 
 //-----------------------------------------------------
 //Comenzar tabla para revisiones
@@ -386,6 +387,8 @@ GROUP BY exercices.exe_id';
     $query_needsgrading = Database::query($sql_needsgrading,__FILE__,__LINE__);
     $num_needsgrading = Database :: num_rows($query_needsgrading);
     
+    
+    
 
  while ($row_needsgrading = Database :: fetch_array($query_needsgrading)) {    
       $user_id = api_get_user_id();
@@ -397,13 +400,30 @@ GROUP BY exercices.exe_id';
                    " . $row_needsgrading['title'] . " 
                 </td>
                 <td>
-                 <a href='../exercice/exercise_show.php?origin=tracking_course&myid=". $user_id ."&id=".$row_needsgrading['exe_id']."&cidReq=$course&student=".$row_needsgrading['exe_user_id']."&total_time=".$row_needsgrading['total_time']."&my_exe_exo_id=".$row_needsgrading['exe_exo_id']."'>".
-                    $row_needsgrading['exe_id'].'  <img title="Show and mark attempt" alt="Show and mark attempt" src="../../main/img/quiz.gif">'."</a><br>
+                 <a href='../exercice/exercise_show.php?origin=tracking_course&myid=". $user_id ."&id=".$row_needsgrading['exe_id']."&cidReq=$course&student=".$row_needsgrading['exe_user_id']."&total_time=".$row_needsgrading['total_time']."&my_exe_exo_id=".$row_needsgrading['exe_exo_id']."'>".''.'  <img title="Show and mark attempt" alt="Show and mark attempt" src="../../main/img/quiz.gif">'."</a><br>
                 </td>
             </tr>";
     }
+}     
+
+    $sql_ann = 'SELECT * From  '.$t_student_pub.' as ann WHERE ann.qualificator_id=0 AND ann.filetype <> "folder"';
+    $query_ann = Database::query($sql_ann,__FILE__,__LINE__);
+    $num_ann = Database :: num_rows($query_ann);
+    while ($row_ann = Database :: fetch_array($query_ann)) {
+    echo  "<tr class='row_odd'>
+                 <td>
+                   " . $row_ann['author'] . " 
+                </td>
+                <td>
+                  " . $row_ann['title']  ."
+                </td>
+                <td>
+                 <a href='".api_get_path(WEB_PATH)."main/core/views/work/index.php?cidReq=".api_get_course_path()."&action=correct_paper&id=".$row_ann['id']."&assignment_id=".$row_ann['parent_id']."'><img title='Show and mark attempt' alt='Show and mark attempt' src='../../main/img/quiz.gif'></a><br>
+                </td>
+               </tr>";
+    }
     
-}
+
 echo '</table>' ;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -415,7 +435,7 @@ for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $stu
 				<table id="studentmodule" class="data_table">
           <tr>
               <td align="center" colspan="6">
-                  <span style="font-weight: bold; font-size: 20px;"><?php echo $info_user['name'];?></span>
+                  <span style="font-weight: bold; font-size: 20px;"><?php echo $info_user['name'] ;?></span>
               </td>
           </tr>
 					<tr>
@@ -542,7 +562,7 @@ for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $stu
 				//QUIZZ IN LP
 				$score = Tracking :: get_avg_student_score(intval($student_ids[$student_id_counterloop]), Database :: escape_string($course), array (
 					$learnpath['id']
-				));
+				));  
 
 				if (empty ($score)) {
 					$score = 0;
@@ -571,13 +591,16 @@ for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $stu
 						<?php echo api_time_to_hms($total_time) ?>
 						</td>
 						<td align="center">
+
 							<?php
 
-							if (!is_null($score)) {
-								echo $score . '%';
-							} else {
-								echo '-';
-							}
+                      echo '<iframe style="width: 70px; height: 30px;" src="'.api_get_path(WEB_PATH).'main/myspace/lp_tracking.php?cidReq='.api_get_course_path().'&course='.api_get_course_path().'&origin=tracking_course&lp_id='.$learnpath['id'].'&student_id='.$student_ids[$student_id_counterloop].'&aux=yes"></iframe>';
+                                                                                                                                                                            
+// 							if (!is_null($score)) {
+// 								echo $score . '%';
+// 							} else {
+// 								echo '-';
+// 							}
 ?>
 						</td>
 						<td align="center">

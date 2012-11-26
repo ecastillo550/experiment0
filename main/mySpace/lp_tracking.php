@@ -73,8 +73,7 @@ if (!empty($_GET['origin']) && $_GET['origin'] == 'user_course') {
  	$interbreadcrumb[] = array ("url" => "myStudents.php?student=".Security::remove_XSS($_GET['student_id']), "name" => get_lang("StudentDetails"));
  	$nameTools=get_lang("DetailsStudentInCourse");
 }
-
-$interbreadcrumb[] = array("url" => "myStudents.php?student=".Security::remove_XSS($_GET['student_id'])."&course=".$cidReq."&details=true&origin=".Security::remove_XSS($_GET['origin']) , "name" => get_lang("DetailsStudentInCourse"));
+if (isset($_GET['aux']) && $_GET['aux'] == 'yes'){}else{$interbreadcrumb[] = array("url" => "myStudents.php?student=".Security::remove_XSS($_GET['student_id'])."&course=".$cidReq."&details=true&origin=".Security::remove_XSS($_GET['origin']) , "name" => get_lang("DetailsStudentInCourse"));
 $nameTools = get_lang('LearningPathDetails');
 
 $htmlHeadXtra[] = '
@@ -131,6 +130,7 @@ div.description {
 </style>';
 
 Display :: display_header($nameTools);
+}
 
 $lp_id = intval($_GET['lp_id']);
 
@@ -139,21 +139,29 @@ $sql = 'SELECT name
 	WHERE id='.Database::escape_string($lp_id);
 $rs = Database::query($sql, __FILE__, __LINE__);
 $lp_title = Database::result($rs, 0, 0);
-
-echo '<div class ="actions"><div align="left" style="float:left;margin-top:2px;" ><strong>'.$course['title'].' - '.$lp_title.' - '.$name.'</strong></div>
+if (isset($_GET['aux']) && $_GET['aux'] == 'yes'){}else{echo '<div class ="actions"><div align="left" style="float:left;margin-top:2px;" ><strong>'.$course['title'].' - '.$lp_title.' - '.$name.'</strong></div>
 	  <div  align="right">
                 <a href="myStudents.php?student='.Security::remove_XSS($_GET['student_id']).'&details=true&course='.$cidReq.'&origin=tracking_course">' .Display::return_icon('pixel.gif', get_lang('Back'), array('class' => 'toolactionplaceholdericon toolactionback')) . get_lang('Back') . '</a>
         <a href="javascript: void(0);" onclick="javascript: window.print();">'.Display::return_icon('pixel.gif',get_lang('Print'),array('class'=>'toolactionplaceholdericon toolactionprint32')).''.get_lang('Print').'</a>
     		<a href="'.api_get_self().'?export=csv&'.Security::remove_XSS($_SERVER['QUERY_STRING']).'">'.Display::return_icon('pixel.gif',get_lang('ExportAsCSV'),array('class'=>'toolactionplaceholdericon toolactionexportcourse')).''.get_lang('ExportAsCSV').'</a>
 		 </div></div>
-	<div class="clear"></div>';
+	<div class="clear"></div>';echo '<div id="content">';}
+
 	
-echo '<div id="content">';
+
 
 $list = learnpath :: get_flat_ordered_items_list($lp_id);
 $origin = 'tracking';
 
 
+if (isset($_GET['aux']) && $_GET['aux'] == 'yes'){
+	ob_start();
+	include_once  api_get_path(SYS_CODE_PATH).'newscorm/lp_stats_dum.php';
+	$tracking_content = ob_get_contents();
+	ob_end_clean();
+	echo api_utf8_decode($tracking_content, $charset);
+
+}  else {
 if ($export_csv) {
 	include_once api_get_path(SYS_CODE_PATH).'newscorm/lp_stats.php';
 
@@ -167,11 +175,15 @@ if ($export_csv) {
 	echo api_utf8_decode($tracking_content, $charset);
 }
 
-// ending div#content
+}
+
+if (isset($_GET['aux']) && $_GET['aux'] == 'yes'){
+
+}else {// ending div#content
 echo '</div>';
 
 // bottom actions toolbar
 echo '<div class="actions">';
 echo '</div>';
 
-Display :: display_footer();
+Display :: display_footer();}
