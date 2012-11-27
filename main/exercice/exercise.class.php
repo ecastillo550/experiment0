@@ -892,10 +892,10 @@ if (!class_exists('Exercise')):
     $form->addElement('html', '<table width= "100%">');
     $form->addElement('html', '     <tr>
                                         <td width="18px" valign="top">');
-                                            $form->addElement('radio', 'quizType', '', '', 1, array('disabled'=>'disabled'));
-    $form->addElement('html', '         </td>
-                                        <td width="150px" valign="top"><br />'.get_lang('QuizMode').'</td>
-                                        <td valign="top">'.get_lang('QuizSelfLearningModeDesc').'</td>
+                                            $form->addElement('hidden', 'quizType', '', '', 1, array('disabled'=>'disabled'));
+    $form->addElement('html', '         </td>  
+                                        <td width="150px" valign="top"><br /></td>
+                                        <td valign="top"></td>
                                         <td rowspan="2" width="290px" valign="middle">'.Display::return_icon('quizgallery/answer_unknow.png').'</td>
                                     </tr>
                                     <tr>

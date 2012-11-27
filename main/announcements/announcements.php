@@ -113,6 +113,7 @@ echo '<div id="content">';
 // distpacher actions to controller
 switch ($action) {	
 	case 'listing':
+        announcement:
         echo "<div style='width:855px;margin-left: 35px;'>";
         $announcementslist = array();
         $announcementslist = AnnouncementManager::get_all_annoucement_by_course($course_db);
@@ -152,14 +153,12 @@ switch ($action) {
       $emailTitle = $_POST['emailtitle'];
       $newContent = $_POST['content'];
       $file = $_FILES['user_upload'];
-      echo   $emailTitle;
-      echo   $newContent;
-      echo   $file;
-      
-      
+      echo   'Anuncio Guardado';
       
       AnnouncementManager::add_announcement($emailTitle, $newContent, $order, $to, $file, $file_comment=''); 
       
+      goto announcement;
+
       } else {
       echo "<form action='announcements.php?posto=yes&action=add&cidReq=".api_get_course_path()."' method='post' enctype='multipart/form-data'>
       Titulo del anuncio <input type='text' value='' name='emailtitle'><div style='width: 900px; position: relative;'>" ;
@@ -189,7 +188,9 @@ switch ($action) {
         if(isset($_POST['delete_file']) && $_POST['delete_file'] == 'yes'){
               AnnouncementManager::delete_attatchment_entry(api_get_course_info(), $announcement_id);
               echo 'eliminado';
-          }        
+          } 
+          
+          goto announcement;       
       
       } else {
       
@@ -214,6 +215,7 @@ switch ($action) {
       if(isset($_GET['eliminar']) && $_GET['eliminar'] == 'yes'){
           AnnouncementManager::delete_announcement(api_get_course_info(), $announcement_id);
           echo 'eliminado';
+          goto announcement;    
           
       }	else {
       

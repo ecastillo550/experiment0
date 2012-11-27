@@ -333,7 +333,7 @@ function show_add_forum_form($inputvalues=array()) {
 	$groups=GroupManager::get_group_list();
 	$groups_titles[0]=get_lang('NotAGroupForum');
 	foreach ($groups as $key=>$value) {
-		$groups_titles[$value['id']]=$value['name'];
+		$groups_titles[$value['id']]=$value['1'];
 	}
 	$form->addElement('select', 'group_forum', get_lang('ForGroup'), $groups_titles);
 

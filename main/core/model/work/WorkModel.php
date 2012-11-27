@@ -159,7 +159,7 @@ class WorkModel
 						$deadline = $number_of_papers = $number_of_papers_corrected = $average_marks = '';
 					}
 			if (api_is_allowed_to_edit() || api_is_grouptutor($_course,api_get_session_id(),api_get_user_id())){
-			$assignments[] = array($assignment_id,$edit_link,$title_link,strip_tags($assignment_description,'<p><a><span><br><b>'),'<center>'.$deadline.'</center>',$number_of_papers,$number_of_papers_corrected,'<center>'.$average_marks.'</center>',$download_link);
+			$assignments[] = array($assignment_id,$edit_link,$title_link,strip_tags($assignment_description,'<p><a><span><br><b>'),'<center>'.$deadline.'</center>',$number_of_papers,$number_of_papers_corrected,'<center>'.$average_marks.'</center>');
 			}
 			else {
 				$assignments[] = array($icon_link,$title_link,strip_tags($assignment_description,'<p><a><span><br><b>'),'<center>'.$deadline.'</center>');
@@ -200,7 +200,7 @@ class WorkModel
 				$table->set_header(5, get_lang('Papers'));
 				$table->set_header(6, get_lang('Corrected'));
 				$table->set_header(7, get_lang('Average'));
-				$table->set_header(8, get_lang('DownloadAll'));
+//				$table->set_header(8, get_lang('DownloadAll'));
 		}
 		if (api_is_allowed_to_edit() || api_is_grouptutor($_course,api_get_session_id(),api_get_user_id())){
 			$table->set_form_actions(array ('delete' => get_lang('Delete')));
