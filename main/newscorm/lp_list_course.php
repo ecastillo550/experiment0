@@ -372,7 +372,7 @@ for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $stu
     
     $sql_needsgrading = "SELECT DISTINCT exercices.exe_id, exercices.exe_user_id, exercices.exe_result, lpiv.total_time
 ,exercices.exe_exo_id, lpi.title
-FROM dokeos_stats.track_e_attempt AS attempt, dokeos_stats.track_e_exercices AS exercices,
+FROM ".Database::get_statistic_database().".track_e_attempt AS attempt, ".Database::get_statistic_database().".track_e_exercices AS exercices,
 $t_lp_view As lpv, $t_lp_item As lpi, $TBL_LP_ITEM_VIEW as lpiv
 WHERE exercices.exe_id = attempt.exe_id
 AND lpv.id=lpiv.lp_view_id
