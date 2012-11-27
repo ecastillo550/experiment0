@@ -593,14 +593,31 @@ for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $stu
 						<td align="center">
 
 							<?php
-                echo 'test' ;
+              $studentScore = 0;
+              $maxScoreSum = 0;
+                 $sql_score = 'SELECT * FROM '.$t_lpiv.' as lp_item_view INNER JOIN '.$t_lpi.' as lp_item INNER JOIN '.$t_lpv.' as lp_view ON lp_item.id=lp_item_view.lp_item_id AND (lp_item.item_type="student_publication" OR lp_item.item_type="quiz") AND lp_item.lp_id='.$learnpath['id'].' AND lp_view.user_id='.$student_ids[$student_id_counterloop].' AND lp_view.lp_id = ' .$learnpath['id']. ' AND lp_view.id=lp_item_view.lp_view_id';
+                 $query_score = Database::query($sql_score,__FILE__,__LINE__);
+                 $num_score = Database :: num_rows($sql_score);
+                 while ($row_score = Database :: fetch_array($query_score)) {
+                 //if($row_score['score'] == null){$row_score['score']=0;}
+                 $studentScore +=  $row_score['score'];
+//                 echo  '<br><br>score '.$row_score['score'];
+//                 echo  '<br>score sum '.$studentScore;
+                 $maxScoreSum += $row_score['max_score'];
+//                 echo  '<br>max '.$row_score['max_score'];
+//                 echo  '<br>max sum '.$maxScoreSum;
+                 
+                 } 
+                 $finalScore = ($studentScore / $maxScoreSum)*100;
+                 echo  $finalScore;
+                
                //       echo '<iframe style="width: 70px; height: 30px;" src="'.api_get_path(WEB_PATH).'main/myspace/lp_tracking.php?cidReq='.api_get_course_path().'&course='.api_get_course_path().'&origin=tracking_course&lp_id='.$learnpath['id'].'&student_id='.$student_ids[$student_id_counterloop].'&aux=yes"></iframe>';
                                                                                                                                                                             
-// 							if (!is_null($score)) {
-// 								echo $score . '%';
-// 							} else {
-// 								echo '-';
-// 							}
+//  							if (!is_null($score)) {
+//  								echo $score . '%';
+//  							} else {
+//  								echo '-';
+//  							}
 ?>
 						</td>
 						<td align="center">

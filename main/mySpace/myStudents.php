@@ -776,12 +776,30 @@ if (!empty ($_GET['student'])) {
 						</td>
 						<td align="center">
 							<?php
-
-							if (!is_null($score)) {
-								echo $score . '%';
-							} else {
-								echo '-';
-							}
+              $studentScore = 0;
+              $maxScoreSum = 0;
+              $finalScore = 0;
+                 $sql_score = 'SELECT * FROM '.$t_lpiv.' as lp_item_view INNER JOIN '.$t_lpi.' as lp_item INNER JOIN '.$t_lpv.' as lp_view ON lp_item.id=lp_item_view.lp_item_id AND (lp_item.item_type="student_publication" OR lp_item.item_type="quiz") AND lp_item.lp_id='.$learnpath['id'].' AND lp_view.user_id='.$_GET['student'].' AND lp_view.lp_id = ' .$learnpath['id']. ' AND lp_view.id=lp_item_view.lp_view_id';
+                 $query_score = Database::query($sql_score,__FILE__,__LINE__);
+                 $num_score = Database :: num_rows($sql_score);
+                 while ($row_score = Database :: fetch_array($query_score)) {
+                 //if($row_score['score'] == null){$row_score['score']=0;}
+                 $studentScore +=  $row_score['score'];
+//                 echo  '<br><br>score '.$row_score['score'];
+//                 echo  '<br>score sum '.$studentScore;
+                 $maxScoreSum += $row_score['max_score'];
+//                 echo  '<br>max '.$row_score['max_score'];
+//                 echo  '<br>max sum '.$maxScoreSum;
+                 } 
+                 $finalScore = ($studentScore / $maxScoreSum)*100;
+                 echo  $finalScore;
+                 
+                 
+// 							if (!is_null($score)) {
+// 								echo $score . '%';
+// 							} else {
+// 								echo '-';
+// 							}
 ?>
 						</td>
 						<td align="center">
