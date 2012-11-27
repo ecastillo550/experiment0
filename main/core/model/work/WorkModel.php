@@ -1201,11 +1201,12 @@ class WorkModel
 //  EP saving on lp
 //---------------------------------------------------------		
                 $t_lp_item = Database :: get_course_table(TABLE_LP_ITEM, $info_course['db_name']);
-                $t_lp_item_view = Database :: get_course_table(TABLE_LP_ITEM_VIEW, $info_course['db_name']);	
+                $t_lp_item_view = Database :: get_course_table(TABLE_LP_ITEM_VIEW, $info_course['db_name']);
+                $t_lp_view = Database :: get_course_table(TABLE_LP_VIEW, $info_course['db_name']);	
 //We get the line we want to change the score                
-                $sql_FIRST = "SELECT $t_lp_item_view.id FROM $t_lp_item_view INNER JOIN  $t_lp_item INNER JOIN  {$this->tableAssignment} ON $t_lp_item.id=$t_lp_item_view.lp_item_id 
+                $sql_FIRST = "SELECT $t_lp_item_view.id FROM $t_lp_item_view INNER JOIN  $t_lp_item INNER JOIN  {$this->tableAssignment} INNER JOIN $t_lp_view ON $t_lp_item.id=$t_lp_item_view.lp_item_id 
                 AND $t_lp_item.path={$this->tableAssignment}.parent_id AND $t_lp_item.item_type='student_publication' AND {$this->tableAssignment}.user_id=
-                ".$assignmentInfo['user_id']." AND {$this->tableAssignment}.id=".$this->paper_id;
+                ".$assignmentInfo['user_id']." AND {$this->tableAssignment}.id=".$this->paper_id . " AND $t_lp_view.user_id={$this->tableAssignment}.user_id AND $t_lp_item_view.lp_view_id=$t_lp_view.id";
                           
                 $sql_FIRST_raw = Database::query($sql_FIRST, __FILE__, __LINE__);
                 $sql_FIRST_fetch = Database::fetch_array($sql_FIRST_raw);

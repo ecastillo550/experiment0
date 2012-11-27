@@ -101,8 +101,7 @@ CREATE TABLE track_e_exercices (
   exe_weighting float(6,2) NOT NULL default 0,
   PRIMARY KEY  (exe_id),
   KEY exe_user_id (exe_user_id),
-  KEY exe_cours_id (exe_cours_id),
-  flag tinyint(1) NOT NULL default 0
+  KEY exe_cours_id (exe_cours_id)
 );
 
 ALTER TABLE track_e_exercices ADD status varchar(20) NOT NULL default '';
@@ -126,7 +125,8 @@ CREATE TABLE track_e_attempt (
   course_code varchar(40) NOT NULL default '',
   position int default 0,
   tms datetime NOT NULL default '0000-00-00 00:00:00',
-  orig_answer text NOT NULL default ''
+  orig_answer text NOT NULL default '', 
+  flag tinyint(1) NOT NULL default 0
 );
 ALTER TABLE track_e_attempt ADD INDEX (exe_id);
 ALTER TABLE track_e_attempt ADD INDEX (user_id); 
