@@ -16,6 +16,7 @@ require_once api_get_path(LIBRARY_PATH).'formvalidator/FormValidator.class.php';
 include_once (api_get_path(LIBRARY_PATH) . 'fileManage.lib.php');
 include_once (api_get_path(LIBRARY_PATH) . 'fileUpload.lib.php');
 include_once (api_get_path(LIBRARY_PATH) . 'fileDisplay.lib.php');
+include_once (api_get_path(LIBRARY_PATH) . 'groupmanager.lib.php');
 require_once '../../../newscorm/learnpath.class.php';
 require_once '../../../newscorm/learnpathItem.class.php';
 

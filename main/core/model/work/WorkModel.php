@@ -592,8 +592,8 @@ class WorkModel
 		{
 			$assignments[$obj->id] = $obj->title;
 		} 
-			
-		$form->addElement('select', 'assignment', get_lang('AssignmentName'), $assignments,'style="visibility:hidden"');	
+		$form->addElement('html','<span style="margin-left: 190px;">Tarea: '.$assignments[$this->assignment_id].'</span> ');	
+		$form->addElement('select', 'assignment', '', $assignments,'style="visibility:hidden"');	
 		$form->addElement('hidden','sec_token',$stok);
 		$form->addElement('hidden','assignment_id','','id="assignment_id"');
 		$form->addElement('hidden','default_assignment_id','','id="default_assignment_id"');
@@ -1107,8 +1107,9 @@ class WorkModel
 
 	public function getCorrectPaperForm() {
 		global $_course;
+    $TSTDPUBASG			= Database :: get_course_table(TABLE_STUDENT_PUBLICATION_ASSIGNMENT);
 		
-		$sql = "SELECT * FROM {$this->tableAssignment} WHERE id = ".$this->paper_id;
+		$sql = "SELECT * FROM {$this->tableAssignment} as work, $TSTDPUBASG as ass  WHERE work.id = ".$this->paper_id ." AND ass.publication_id=work.parent_id";
 		$result = Database::query($sql, __FILE__, __LINE__);
 		$assignmentInfo = Database::fetch_array($result);
 		
@@ -1123,13 +1124,21 @@ class WorkModel
 
 		$descrption = str_replace("<p>","",$assignmentInfo['description']);
 		$descrption = str_replace("</p>","",$descrption);
-		
+		$deadline = $assignmentInfo['ends_on'];
+    $ActualTime = api_get_datetime();
+    $GotTime = $submittedon - $deadline;
+    
 		$form = new FormValidator('correct_paper', 'post',api_get_self().'?'.api_get_cidReq().'&action=correct_paper&assignment_id='.$this->assignment_id.'&corrected=Y&id='.$this->paper_id,'', 'enctype="multipart/form-data"');
 		$form->addElement('header', '', get_lang('CorrectPaper'));	
 		$form->addElement('static','paper',get_lang('Paper'),' :&nbsp;&nbsp;&nbsp;<span>'.$assignmentInfo['title'].'</span>');
 		$form->addElement('static','summary',get_lang('Summary'),' :&nbsp;&nbsp;&nbsp;<span>'.$descrption.'</span>');
 		$form->addElement('static','author',get_lang('Author'),' :&nbsp;&nbsp;&nbsp;<span>'.$assignmentInfo['author'].'</span>');
+	  if($GotTime < 0){  
 		$form->addElement('static','date',get_lang('Submittedon'),' :&nbsp;&nbsp;&nbsp;<span>'.$submittedon.'</span>');
+    }
+    else{
+    $form->addElement('static','date',get_lang('Submittedon'),' :&nbsp;&nbsp;&nbsp;<span style="color:red;">'.$submittedon.'</span>');
+    }
 		$form->addElement('static','download',get_lang('DownloadPaper'),' :&nbsp;&nbsp;&nbsp;<a href="'.api_get_self().'?'.api_get_cidReq().'&action=download&file='.$assignmentInfo['url'].'">'.Display::return_icon('pixel.gif',get_lang('Download'),array('class' => 'actionplaceholdericon actionsavebackup')).'</a>');
                 
 		$form->addElement('file', 'file', get_lang('CorrectionUpload'), 'size="40"');
