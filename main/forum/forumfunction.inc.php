@@ -2775,7 +2775,7 @@ function get_whats_new() {
 	if ($row['post_date'] > $_SESSION['last_post_date'])
 	{
 		$_SESSION['last_post_date'] = $row['post_date'];
-		session_unregister('whatsnew_post_info');
+		api_session_unregister('whatsnew_post_info');
 		$whats_new_reloaded = true; 
 	}
 
