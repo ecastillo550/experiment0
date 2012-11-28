@@ -2044,17 +2044,17 @@ function show_add_post_form($action='', $id='', $form_values='') {
 	if( (api_is_course_admin() || api_is_course_coach() || api_is_course_tutor()) && !($my_thread) ){
 		// thread qualify
 
-		$form->addElement('static','Group', '<br /><strong>'.get_lang('AlterQualifyThread').'</strong>');
-		$form->addElement('text', 'numeric_calification', get_lang('QualifyNumeric'),'Style="width:40px"');
-		$form->applyFilter('numeric_calification', 'html_filter');
-		$form->addElement('checkbox', 'thread_qualify_gradebook', '', get_lang('QualifyThreadGradebook'),'onclick="javascript:if(this.checked==true){document.getElementById(\'options_field\').style.display = \'block\';}else{document.getElementById(\'options_field\').style.display = \'none\';}"');
+//		$form->addElement('static','Group', '<br /><strong>'.get_lang('AlterQualifyThread').'</strong>');
+//		$form->addElement('text', 'numeric_calification', get_lang('QualifyNumeric'),'Style="width:40px"');
+//		$form->applyFilter('numeric_calification', 'html_filter');
+//		$form->addElement('checkbox', 'thread_qualify_gradebook', '', get_lang('QualifyThreadGradebook'),'onclick="javascript:if(this.checked==true){document.getElementById(\'options_field\').style.display = \'block\';}else{document.getElementById(\'options_field\').style.display = \'none\';}"');
 
-		$form -> addElement('html','<div id="options_field" style="display:none">');
-		$form->addElement('text', 'calification_notebook_title', get_lang('TitleColumnGradebook'));
-		$form->applyFilter('calification_notebook_title', 'html_filter');
-		$form->addElement('text', 'weight_calification', get_lang('QualifyWeight'),'value="0.00" Style="width:40px" onfocus="this.select();"');
-		$form->applyFilter('weight_calification', 'html_filter');
-		$form->addElement('html','</div>');
+//		$form -> addElement('html','<div id="options_field" style="display:none">');
+//		$form->addElement('text', 'calification_notebook_title', get_lang('TitleColumnGradebook'));
+//		$form->applyFilter('calification_notebook_title', 'html_filter');
+//		$form->addElement('text', 'weight_calification', get_lang('QualifyWeight'),'value="0.00" Style="width:40px" onfocus="this.select();"');
+//		$form->applyFilter('weight_calification', 'html_filter');
+//		$form->addElement('html','</div>');
 	}
 
 	if ($forum_setting['allow_post_notificiation'] AND isset($_user['user_id'])) {
@@ -2423,11 +2423,11 @@ function store_reply($values) {
 
 		send_notification_mails($values['thread_id'], $values);
 
-		session_unregister('formelements');
-		session_unregister('origin');
-		session_unregister('breadcrumbs');
-		session_unregister('addedresource');
-		session_unregister('addedresourceid');
+		api_session_unregister('formelements');
+		api_session_unregister('origin');
+		api_session_unregister('breadcrumbs');
+		api_session_unregister('addedresource');
+		api_session_unregister('addedresourceid');
 
 		echo '<div class="confirmation-message rounded">'.$message.'</div>';
 

@@ -379,7 +379,7 @@ AND lpv.id=lpiv.lp_view_id
 AND lpi.id=lpiv.lp_item_id
 AND lpv.user_id=exercices.exe_user_id
 AND lpiv.score=exercices.exe_result
-AND attempt.flag =1
+AND attempt.flag =0
 AND exercices.status= \"\"
 AND lpv.user_id=".$student_ids[$student_id_counterloop].' 
 GROUP BY exercices.exe_id';
