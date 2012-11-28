@@ -120,7 +120,7 @@ switch ($action) {
         // $count = rows
         // $innercount = elements
         echo "<table id=''  style='margin-top: 15px;'> ";
-        for ($count = 0 ; $count < count($announcementslistAUX) ; $count++){
+        for ($count = 0 ; $count < count($announcementslist) ; $count++){
             for ($innercount = 1 ; $innercount < 3 ; $innercount++){
              echo  "<tr class='row_odd'>";
               if($innercount == 1){
