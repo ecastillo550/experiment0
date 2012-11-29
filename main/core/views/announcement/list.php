@@ -5,7 +5,11 @@
 				<?php         
 					if (!empty($announcementList)) {
 						$i = 0;
-
+//             $courseinfor = array();
+//             $courseinfor =  api_get_course_info();
+// 
+//             $visible = api_get_item_visibility($courseinfor, 'announcement', $i);
+            //if($visible == 1){
 						foreach ($announcementList as $announcementId => $announcement) {                   
 							echo '<script>
 							$(document).ready(function(){
@@ -24,7 +28,8 @@
 							echo '</div>';
 							echo '</td></tr>';
 						   $i++;
-						}                
+						}
+           //}                
 					} 
 					else {
 						echo '<tr><td><div>'.get_lang('YouHaveNoAnnouncement').'</div></td></tr>';

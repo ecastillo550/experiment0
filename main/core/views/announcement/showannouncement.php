@@ -15,7 +15,6 @@
 								});
 							});
 							</script>';
-
 							echo '<tr class="'.($i%2==0?'row_odd':'row_even').'"><td>';
 							echo '<div id="announcement'.$announcement->id.'" class="announcement_list_item">';
 							echo '<a href="index.php?action=view&amp;id='.$announcement->id.'" title="'.$announcement->title.'">';
@@ -25,7 +24,7 @@
 							echo '</div>';
 							echo '</td></tr>';
 						   $i++;
-						}                
+               }              
 					} 
 					else {
 						echo '<tr><td><div>'.get_lang('YouHaveNoAnnouncement').'</div></td></tr>';
@@ -48,7 +47,15 @@
 				echo  '	<br/><div class="announcement_content" style="height: 333px;overflow: auto;">'.nl2br($ann_content).'</div>';
 			} else {
 				echo  '	<br/><div class="announcement_content" style="height: 322px;overflow: auto;">'.nl2br($ann_content).'</div>';	
-			}	
+			}
+      // show attachment list
+                $attachment_list = array();
+                $attachment_list = AnnouncementManager::get_attachment($announcement_id);
+
+                $attachment_icon = '';
+                if (count($attachment_list)>0) {
+                   echo ' <a href="'.api_get_path(WEB_COURSE_PATH).api_get_course_path().'/upload/announcements/'.$attachment_list['path'].'" target="_blank">'.Display::return_icon('attachment.gif','Attachment') . '</a><br><br><br>';               
+                }	
 			echo  '</div>';
 			if(api_is_allowed_to_edit() || (api_get_course_setting('allow_user_edit_announcement') && api_get_user_id() == $insert_user_id)){
 			echo  '<div class="announcements_actions" style="padding-top:0px">';

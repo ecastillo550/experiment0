@@ -73,6 +73,8 @@ class AnnouncementController extends Controller {
                     $this->model->description		 = $_POST['description'];  
 					$this->model->send_receivers     = $_POST['send_to']['receivers'];
 					$this->model->send_to			 = $_POST['send_to']['to'];
+         // $this->model->file		 = $_POST['user_upload']; 
+          
                     $lastInsertId = $this->model->save();
                     unset($_POST);
                     Security::clear_token();                    
@@ -95,6 +97,8 @@ class AnnouncementController extends Controller {
 					$this->model->send_receivers     = $_POST['send_to']['receivers'];
 					$this->model->send_to			 = $_POST['send_to']['to'];
                     $this->model->announcement_id	 = $this->announcementId;
+          //          $this->model->delete_file	 = $_POST['delete_file'];
+                    $this->model->file		 = $_FILES['user_upload']; 
 
                     $lastInsertId = $this->model->save();
                     unset($_POST);

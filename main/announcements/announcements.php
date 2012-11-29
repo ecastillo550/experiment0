@@ -70,6 +70,9 @@ $htmlHeadXtra[] = '
     </style>
 ';
 
+header('Location: '.api_get_path(WEB_VIEW_PATH).'announcement/index.php?'.api_get_cidreq());
+exit();
+ /*
 $htmlHeadXtra[] = AnnouncementManager::user_group_filter_javascript();
 $htmlHeadXtra[] = AnnouncementManager::to_javascript();
 
@@ -304,4 +307,6 @@ echo '<div class="actions"> </div>';
 
 // Footer
 Display :: display_footer(); 
+
+*/
 ?>

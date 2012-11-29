@@ -132,7 +132,7 @@ class AnnouncementModel
         global $charset;
 	require_once(api_get_path(LIBRARY_PATH).'course.lib.php');
     // initiate the object        
-	$form = new FormValidator('announcement_form', 'post', api_get_self().'?'.api_get_cidreq().($this->announcement_id?'&action=edit&id='.intval($this->announcement_id):'&action=add'));	
+	$form = new FormValidator('announcement_form', 'post', api_get_self().'?'.api_get_cidreq().($this->announcement_id?'&action=edit&id='.intval($this->announcement_id):'&action=add'), '', '' ,'enctype="multipart/form-data');	
 	$renderer = & $form->defaultRenderer();
 
 	if ($this->announcement_id) {
@@ -213,7 +213,11 @@ class AnnouncementModel
 
 	if ($this->announcement_id) {
             $form->addElement('html','<div align="left" style="padding-left:10px;"><a href="'.api_get_self().'?'.api_get_cidreq().'&action=delete&id='.intval($this->id).'" onclick="javascript:if(!confirm('."'".addslashes(api_htmlentities(get_lang("ConfirmYourChoice"),ENT_QUOTES,$charset))."'".')) return false;">'.Display::return_icon('pixel.gif', get_lang('Delete'), array('class' => 'actionplaceholdericon actiondelete')).'&nbsp;&nbsp;'.get_lang('Delete').'</a></div>');
-        }        
+        }                       
+  $form->addElement ( 'file', 'user_upload', '', 'size=60');
+//  $form->addElement ('html', 'Eliminar Archivo adjunto');
+//  $form->addElement ( 'checkbox', 'delete_file', '');
+          
 	$form->addElement('style_submit_button', 'SubmitAnnouncement', get_lang('Validate'), 'class="save"');	
 
 	$token = Security::get_token();
@@ -234,12 +238,19 @@ class AnnouncementModel
 		if($this->announcement_id){
 
 			// create the SQL statement to edit the announcement
-			$sql = "UPDATE {$this->tableAnnouncement} SET 
-					title 		= '".Database::escape_string($this->title)."',
-					content 	= '".Database::escape_string($this->description)."'
-					WHERE id = '".Database::escape_string($this->announcement_id)."'";
+// 			$sql = "UPDATE {$this->tableAnnouncement} SET 
+// 					title 		= '".Database::escape_string($this->title)."',
+// 					content 	= '".Database::escape_string($this->description)."'
+// 					WHERE id = '".Database::escape_string($this->announcement_id)."'";
+// 
+// 			$result = Database::query($sql,__FILE__,__LINE__);
 
-			$result = Database::query($sql,__FILE__,__LINE__);
+ //     AnnouncementManager::add_announcement(Database::escape_string($this->title), Database::escape_string($this->description), $order, $to, $this->file, ''); 
+      AnnouncementManager::edit_announcement($this->announcement_id, Database::escape_string($this->title), Database::escape_string($this->description), $to, $this->file, $file_comment=''); 
+        if($this->delete_file){
+              AnnouncementManager::delete_attatchment_entry(api_get_course_info(), $this->announcement_id);
+              echo 'eliminado';
+          }
 
 			// first delete all the information in item_property
 			$sql = "DELETE FROM $t_item_propery WHERE tool='".TOOL_ANNOUNCEMENT."' AND ref='".Database::escape_string($this->announcement_id)."'";
@@ -253,7 +264,7 @@ class AnnouncementModel
 			$result = Database::query("SELECT max(display_order) as max FROM {$this->tableAnnouncement}",__FILE__,__LINE__);
 			$row = Database::fetch_array($result);
 			$max = (int)$row['max'] + 1;
-		
+//		  AnnouncementManager::add_announcement(Database::escape_string($this->title), Database::escape_string($this->description), $order, $to, $this->file, ''); 
 		// create the SQL statement to add the 
 			$sql = "INSERT INTO {$this->tableAnnouncement} SET                                    
                                     title           = '".Database::escape_string($this->title)."',

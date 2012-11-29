@@ -605,7 +605,7 @@ if (!class_exists('Exercise')):
    } else {// creates a new exercise
     //add condition by anonymous user
     $type = '2';
-    $feedbacktype = '3';
+    $feedbacktype = '0';
 
     // get last position
     $sql = 'SELECT MAX(position)+1 as newPosition FROM ' . $TBL_EXERCICES;
@@ -1016,7 +1016,7 @@ if (!class_exists('Exercise')):
                                     </tr>
                                     <tr>
                                         <td valign="top">');
-                                            $form->addElement('radio', 'exerciseFeedbackType', '', '', 0);
+                                            $form->addElement('radio', 'exerciseFeedbackType', '', '', 0 );
     $form->addElement('html', '         </td>
                                         <td valign="top"><br />'.get_lang('ExerciseAtTheEndOfTheTest').'</td>
                                         <td valign="top">'.get_lang('QuizExerciseAtTheEndOfTheTestDesc').'</td>
@@ -1083,7 +1083,7 @@ if (!class_exists('Exercise')):
             $defaults['exerciseType'] = 2;
             $defaults['exerciseAttempts'] = 0;
             $defaults['randomQuestions'] = 0;
-            $defaults['exerciseFeedbackType'] = 3;
+            $defaults['exerciseFeedbackType'] = 2;
             $defaults['exerciseScoreOption'] = 50;
             $defaults['quizType'] = 2;
             $defaults['randomQuestionsOpt'] = 0;
@@ -1231,7 +1231,7 @@ if (!class_exists('Exercise')):
       $form->addGroup($radios, null, get_lang('ExerciseType'));
      } else {
       //we force the options to the DirectFeedback exercisetype
-      $form->addElement('hidden', 'exerciseFeedbackType', '3');
+      $form->addElement('hidden', 'exerciseFeedbackType', '2');
       $form->addElement('hidden', 'exerciseType', '2');
      }
     }
@@ -1415,7 +1415,7 @@ if (!class_exists('Exercise')):
       $defaults['exerciseAttempts'] = 0;
       $defaults['randomQuestions'] = 0;
       $defaults['exerciseDescription'] = '';
-      $defaults['exerciseFeedbackType'] = 3;
+      $defaults['exerciseFeedbackType'] = 2;
       $defaults['results_disabled'] = 0;
 
       $defaults['start_time'] = date('Y-m-d 12:00:00');

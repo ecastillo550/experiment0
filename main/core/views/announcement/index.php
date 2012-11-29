@@ -11,6 +11,11 @@ require_once api_get_path(SYS_MODEL_PATH).'announcement/AnnouncementModel.php';
 require_once api_get_path(SYS_CONTROLLER_PATH).'announcement/AnnouncementController.php';
 require_once api_get_path(LIBRARY_PATH).'formvalidator/FormValidator.class.php';
 require_once api_get_path(LIBRARY_PATH).'tracking.lib.php';
+require_once api_get_path(LIBRARY_PATH).'announcements.inc.php';
+require_once api_get_path(LIBRARY_PATH).'course.lib.php';
+require_once api_get_path(LIBRARY_PATH).'fileUpload.lib.php';
+require_once api_get_path(LIBRARY_PATH).'main_api.lib.php';
+
 
 // additional javascript
 $htmlHeadXtra[] = '
@@ -30,8 +35,11 @@ $htmlHeadXtra[] = '
 // get actions
 $actions = array('listing', 'add', 'view', 'edit', 'delete');
 $action = 'listing';
-if (isset($_GET['action']) && in_array($_GET['action'],$actions)) {
+if (isset($_GET['action']) && in_array($_GET['action'])) {
 	$action = $_GET['action'];
+}
+if (isset($_GET['cidReq']) && in_array($_GET['cidReq'])) {
+	$course = $_GET['cidReq'];
 }
 
 // set announcement id
