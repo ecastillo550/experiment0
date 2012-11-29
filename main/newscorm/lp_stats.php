@@ -795,10 +795,32 @@ if (($counter % 2) == 0) {
 } else {
 	$oddclass = "row_even";
 }
+              $t_lpi = Database :: get_course_table(TABLE_LP_ITEM, $info_course['db_name']);
+          		$t_lpv = Database :: get_course_table(TABLE_LP_VIEW, $info_course['db_name']);
+          		$t_lpiv = Database :: get_course_table(TABLE_LP_ITEM_VIEW, $info_course['db_name']);
+              $studentScore = 0;
+              $maxScoreSum = 0;
+                 $sql_score = 'SELECT * FROM '.$t_lpiv.' as lp_item_view INNER JOIN '.$t_lpi.' as lp_item INNER JOIN '.$t_lpv.' as lp_view ON lp_item.id=lp_item_view.lp_item_id AND (lp_item.item_type="student_publication" OR lp_item.item_type="quiz") AND lp_item.lp_id='.(int)$_GET['lp_id'].' AND lp_view.user_id='.$student_id.' AND lp_view.lp_id = ' .(int)$_GET['lp_id']. ' AND lp_view.id=lp_item_view.lp_view_id';
+                 $query_score = Database::query($sql_score,__FILE__,__LINE__);
+                 $num_score = Database :: num_rows($sql_score);
+                 while ($row_score = Database :: fetch_array($query_score)) {
+                 //if($row_score['score'] == null){$row_score['score']=0;}
+                 $studentScore +=  $row_score['score'];
+//                 echo  '<br><br>score '.$row_score['score'];
+//                 echo  '<br>score sum '.$studentScore;
+                 $maxScoreSum += $row_score['max_score'];
+//                 echo  '<br>max '.$row_score['max_score'];
+//                 echo  '<br>max sum '.$maxScoreSum;
+                 
+                 } 
+                 $finalScore = round (($studentScore / $maxScoreSum)*100,2);
+                 $finalScore .= "%";
+
+
 
 if (empty($extend_all)) {
 	$output .= "<tr class='$oddclass'>\n" . "<td></td>\n" . '<td colspan="4"><div class="mystatus"><i>' . api_convert_encoding(get_lang('AccomplishedStepsTotal') , $lp_charset, $dokeos_charset) . "</i></div></td>\n"
- 			. '<td colspan="2"></td>' . "\n" . '<td colspan="2"><div class="mystatus" align="center">' . $final_score .  "</div></td>\n" . '<td colspan="2"><div class="mystatus">' . $total_time . '</div></td><td></td>' . "\n" . "</tr>\n";
+ 			. '<td colspan="2"></td>' . "\n" . '<td colspan="2"><div class="mystatus" align="center">' . $finalScore .  "</div></td>\n" . '<td colspan="2"><div class="mystatus">' . $total_time . '</div></td><td></td>' . "\n" . "</tr>\n";
 }
 
 $output .= "</table></td></tr></table>";

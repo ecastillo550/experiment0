@@ -68,10 +68,12 @@ echo '<div id="content">';
   <th><?php echo get_lang('Course'); ?></th>
   <th><?php echo get_lang('Time'); ?></th>
   <th><?php echo get_lang('Progress'); ?></th>
-  <th><?php
-  echo get_lang('Score');
-  Display :: display_icon('info3.gif', get_lang('ScormAndLPTestTotalAverage'), array ('align' => 'absmiddle', 'hspace' => '3px'));
-  ?></th>
+<?php
+//  <th>
+//  echo get_lang('Score');
+ // Display :: display_icon('info3.gif', get_lang('ScormAndLPTestTotalAverage'), array ('align' => 'absmiddle', 'hspace' => '3px'));
+//  </th>
+ ?>
   <th><?php echo get_lang('LastConnexion'); ?></th>
   <th><?php echo get_lang('Details'); ?></th>
 </tr>
@@ -98,15 +100,21 @@ foreach ($courses as $enreg) {
   	<td align='center'>
   		<?php echo $progress.'%'; ?>
   	</td>
-  	<td align='center'>
-		<?php
-		if (!is_null($percentage_score)) {
-			echo $percentage_score.'%';
-		} else {
-			echo '0%';
-		}
-		?>
-  	</td>
+<?php
+//  	<td align='center'>
+		
+	//	if (!is_null($percentage_score)) {
+//EP style---------------------------------------------------------------------------------------			
+       
+//       
+//       
+//       echo $percentage_score.'%';
+// 		} else {
+// 			echo '0%';
+// 		}
+		
+//  	</td>
+ ?>
   	<td align='center' >
 		<?php echo $last_connection; ?>
   	</td>
@@ -249,6 +257,7 @@ foreach ($courses as $enreg) {
 						}
 						echo "	</td>
 							  </tr>
+                
 							 ";
 					}
 
@@ -261,6 +270,43 @@ foreach ($courses as $enreg) {
 							</tr>
 						 ";
 				}
+        
+        $t_lp = Database :: get_course_table(TABLE_LP_MAIN, $course_info['db_name']);
+              $t_lpi = Database :: get_course_table(TABLE_LP_ITEM,$course_info['db_name']);
+          		$t_lpv = Database :: get_course_table(TABLE_LP_VIEW, $course_info['db_name']);
+          		$t_lpiv = Database :: get_course_table(TABLE_LP_ITEM_VIEW, $course_info['db_name']);
+              
+              $sql_lp = 'SELECT * FROM '.$t_lp;
+              $query_lp = Database::query($sql_lp,__FILE__,__LINE__);
+              $finalsum = 0;
+              
+              while ($row_lp = Database :: fetch_array($query_lp)){
+                 $studentScore = 0;
+                 $maxScoreSum = 0;
+                 $sql_score = 'SELECT * FROM '.$t_lpiv.' as lp_item_view INNER JOIN '.$t_lpi.' as lp_item INNER JOIN '.$t_lpv.' as lp_view ON lp_item.id=lp_item_view.lp_item_id AND (lp_item.item_type="student_publication" OR lp_item.item_type="quiz") AND lp_item.lp_id='.$row_lp['id'].' AND lp_view.user_id='.$_user['user_id'].' AND lp_view.lp_id = ' .$row_lp['id']. ' AND lp_view.id=lp_item_view.lp_view_id';
+                 $query_score = Database::query($sql_score,__FILE__,__LINE__);
+                 $num_score = Database :: num_rows($sql_score);
+                                 while ($row_score = Database :: fetch_array($query_score)) {
+//                                         echo "LP id " . $row_score['lp_id'];
+                                         //if($row_score['score'] == null){$row_score['score']=0;}
+                                         $studentScore +=  $row_score['score'];
+//                                         echo  '<br><br>score '.$row_score['score'];
+//                                         echo  '<br>score sum '.$studentScore;
+                                         $maxScoreSum += $row_score['max_score'];
+//                                         echo  '<br>max '.$row_score['max_score'] ;
+//                                         echo  '<br>max sum '.$maxScoreSum;
+                                 } 
+                 $finalScore = round (($studentScore / $maxScoreSum)*100,2);
+                 $n++;
+
+                 $finalsum += $finalScore;
+
+                 }
+                   
+                 $final = round(($finalsum/$n),2);
+        echo '<tr>
+                <td colspan= 4><span style="float:right;margin-right: 30px;"><b>Total Score: '.$final.'%</b></span></td>
+                </tr> ';
 			?>
 			<tr>
 			  <th class="head" style="color:#000"><?php echo get_lang('Exercices'); ?></th>
@@ -285,10 +331,7 @@ foreach ($courses as $enreg) {
 							$sql_essais = "	SELECT COUNT(ex.exe_id) as essais
 											FROM $tbl_stats_exercices AS ex
 											WHERE ex.exe_user_id='".$_user['user_id']."' AND ex.exe_cours_id = '".$course_info['code']."'
-											AND ex.exe_exo_id = ".$exercices['id']."
-											AND orig_lp_id = 0
-											AND orig_lp_item_id = 0	"
-										 ;
+											AND ex.exe_exo_id = ".$exercices['id'];
 							$result_essais = Database::query($sql_essais , __FILE__, __LINE__);
 							$essais = Database::fetch_array($result_essais);
 
@@ -297,16 +340,14 @@ foreach ($courses as $enreg) {
 										 WHERE exe_user_id = ".$_user['user_id']."
 											 AND exe_cours_id = '".$course_info['code']."'
 											 AND exe_exo_id = ".$exercices['id']."
-											 AND orig_lp_id = 0
-											 AND orig_lp_item_id = 0
 										ORDER BY exe_date DESC LIMIT 1";
 
 							$result_score = Database::query($sql_score, __FILE__, __LINE__);
 							$score = 0;
 							while($current_score = Database::fetch_array($result_score)) {
-								$score = $score + $current_score['exe_result'];
-								$weighting = $weighting + $current_score['exe_weighting'];
-								$exe_id = $current_score['exe_id'];
+								$score = $score + $current_score[1];
+								$weighting = $weighting + $current_score[2];
+								$exe_id = $current_score[0];
 							}
 
 							if  ($weighting > 0) {

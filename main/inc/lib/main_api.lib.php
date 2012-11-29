@@ -2408,6 +2408,8 @@ function api_is_anonymous($user_id = null, $db_check = false) {
  */
 function api_not_allowed($print_headers = false) {
 
+require_once api_get_path(LIBRARY_PATH).'formvalidator/FormValidator.class.php';
+
 	$home_url = api_get_path(WEB_PATH);
 	$user = api_get_user_id();
 	$course = api_get_course_id();
@@ -2444,10 +2446,17 @@ function api_not_allowed($print_headers = false) {
 			//Display::display_error_message(get_lang('NotAllowedClickBack').'<br /><br /><a href="'.$_SERVER['HTTP_REFERER'].'">'.get_lang('BackToPreviousPage').'</a><br />', false);
 			echo get_lang('NotAllowedClickBack').'<br /><br /><a href="'.$_SERVER['HTTP_REFERER'].'">'.get_lang('BackToPreviousPage').'</a><br />';
 			echo '</div>';
+      $form = new FormValidator('formLogin', 'post', api_get_self().'?'.$_SERVER['QUERY_STRING']);
+		$form->addElement('static', null, null, get_lang('UserName'));
+		$form->addElement('text', 'login', '', array('size' => USERNAME_MAX_LENGTH));
+		$form->addElement('static', null, null, get_lang('Password'));
+		$form->addElement('password', 'password', '', array('size' => USERNAME_MAX_LENGTH));
+		$form->addElement('style_submit_button', 'submitAuth', get_lang('Enter'),'class="login"');
+		$test ='<div id="expire_session"><br />'.$form->return_form().'</div>';
 			if ($print_headers && $origin != 'learnpath') { Display::display_footer(); }
 			die();
 		}
-		require_once api_get_path(LIBRARY_PATH).'formvalidator/FormValidator.class.php';
+		
 		$form = new FormValidator('formLogin', 'post', api_get_self().'?'.$_SERVER['QUERY_STRING']);
 		$form->addElement('static', null, null, get_lang('UserName'));
 		$form->addElement('text', 'login', '', array('size' => USERNAME_MAX_LENGTH));
@@ -2460,6 +2469,15 @@ function api_not_allowed($print_headers = false) {
 		//Display::display_error_message('<left>'.get_lang('NotAllowedOrSessionTimeout').'<br />'.get_lang('PleaseLoginAgainFromFormBelow').'<br />'.$test.'</left>', false);
 		echo '<div id="content">'.get_lang('NotAllowedOrSessionTimeout').''.get_lang('PleaseLoginAgainFromFormBelow').''.$test.'</div>';
 		$_SESSION['request_uri'] = $_SERVER['REQUEST_URI'];
+    
+    $form = new FormValidator('formLogin', 'post', api_get_self().'?'.$_SERVER['QUERY_STRING']);
+		$form->addElement('static', null, null, get_lang('UserName'));
+		$form->addElement('text', 'login', '', array('size' => USERNAME_MAX_LENGTH));
+		$form->addElement('static', null, null, get_lang('Password'));
+		$form->addElement('password', 'password', '', array('size' => USERNAME_MAX_LENGTH));
+		$form->addElement('style_submit_button', 'submitAuth', get_lang('Enter'),'class="login"');
+		$test ='<div id="expire_session"><br />'.$form->return_form().'</div>';
+    
 		if ($print_headers && $origin != 'learnpath') { Display::display_footer(); }
 		die();
 	}
@@ -2469,6 +2487,15 @@ function api_not_allowed($print_headers = false) {
 		//Display::display_error_message(get_lang('NotAllowedClickBack').'<br /><br /><a href="'.$_SERVER['HTTP_REFERER'].'">'.get_lang('BackToPreviousPage').'</a><br />', false);
 		echo get_lang('NotAllowedClickBack').' <a href="'.$_SERVER['HTTP_REFERER'].'">'.get_lang('BackToPreviousPage').'</a><br />';
 		echo '</div>';
+    
+    $form = new FormValidator('formLogin', 'post', api_get_self().'?'.$_SERVER['QUERY_STRING']);
+		$form->addElement('static', null, null, get_lang('UserName'));
+		$form->addElement('text', 'login', '', array('size' => USERNAME_MAX_LENGTH));
+		$form->addElement('static', null, null, get_lang('Password'));
+		$form->addElement('password', 'password', '', array('size' => USERNAME_MAX_LENGTH));
+		$form->addElement('style_submit_button', 'submitAuth', get_lang('Enter'),'class="login"');
+		$test ='<div id="expire_session"><br />'.$form->return_form().'</div>';
+    
 		if ($print_headers && $origin != 'learnpath') {Display::display_footer();}
 		die();
 	}
@@ -2478,6 +2505,15 @@ function api_not_allowed($print_headers = false) {
 	//Display::display_error_message(get_lang('NotAllowedOrSessionTimeout').'<br /><br /><a href="'.$home_url.'" target="_top">'.get_lang('PleaseLoginAgainFromHomepage').'</a><br />', false);
 	echo get_lang('NotAllowedOrSessionTimeout').'<a href="'.$home_url.'" target="_top">'.get_lang('PleaseLoginAgainFromHomepage').'</a>';
 	echo '</div>';
+  
+  $form = new FormValidator('formLogin', 'post', api_get_self().'?'.$_SERVER['QUERY_STRING']);
+		$form->addElement('static', null, null, get_lang('UserName'));
+		$form->addElement('text', 'login', '', array('size' => USERNAME_MAX_LENGTH));
+		$form->addElement('static', null, null, get_lang('Password'));
+		$form->addElement('password', 'password', '', array('size' => USERNAME_MAX_LENGTH));
+		$form->addElement('style_submit_button', 'submitAuth', get_lang('Enter'),'class="login"');
+		$test ='<div id="expire_session"><br />'.$form->return_form().'</div>';
+  
 	if ($print_headers && $origin != 'learnpath') { Display::display_footer(); }
 	die();
 }

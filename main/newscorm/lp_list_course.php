@@ -608,7 +608,8 @@ for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $stu
 //                 echo  '<br>max sum '.$maxScoreSum;
                  
                  } 
-                 $finalScore = ($studentScore / $maxScoreSum)*100;
+                 $finalScore = round (($studentScore / $maxScoreSum)*100,2);
+                 $finalScore .= "%";
                  echo  $finalScore;
                 
                //       echo '<iframe style="width: 70px; height: 30px;" src="'.api_get_path(WEB_PATH).'main/myspace/lp_tracking.php?cidReq='.api_get_course_path().'&course='.api_get_course_path().'&origin=tracking_course&lp_id='.$learnpath['id'].'&student_id='.$student_ids[$student_id_counterloop].'&aux=yes"></iframe>';

@@ -511,7 +511,42 @@ if (!empty ($_GET['student'])) {
 ?>
 												</td>
 						<td align="left">
-													<?php  echo $avg_student_score.'%' ?>
+													<?php
+              $course_db['db_name'] = Database::get_current_course_database();
+              $t_lp = Database :: get_course_table(TABLE_LP_MAIN, $course_db['db_name']);
+              $t_lpi = Database :: get_course_table(TABLE_LP_ITEM,$course_db['db_name']);
+          		$t_lpv = Database :: get_course_table(TABLE_LP_VIEW, $course_db['db_name']);
+          		$t_lpiv = Database :: get_course_table(TABLE_LP_ITEM_VIEW, $course_db['db_name']);
+              
+              $sql_lp = 'SELECT * FROM '.$t_lp;
+              $query_lp = Database::query($sql_lp,__FILE__,__LINE__);
+              $finalsum = 0;
+              
+              while ($row_lp = Database :: fetch_array($query_lp)){
+                 $studentScore = 0;
+                 $maxScoreSum = 0;
+                 $sql_score = 'SELECT * FROM '.$t_lpiv.' as lp_item_view INNER JOIN '.$t_lpi.' as lp_item INNER JOIN '.$t_lpv.' as lp_view ON lp_item.id=lp_item_view.lp_item_id AND (lp_item.item_type="student_publication" OR lp_item.item_type="quiz") AND lp_item.lp_id='.$row_lp['id'].' AND lp_view.user_id='.$student_id.' AND lp_view.lp_id = ' .$row_lp['id']. ' AND lp_view.id=lp_item_view.lp_view_id';
+                 $query_score = Database::query($sql_score,__FILE__,__LINE__);
+                 $num_score = Database :: num_rows($sql_score);
+                                 while ($row_score = Database :: fetch_array($query_score)) {
+//                                         echo "LP id " . $row_score['lp_id'];
+                                         //if($row_score['score'] == null){$row_score['score']=0;}
+                                         $studentScore +=  $row_score['score'];
+//                                         echo  '<br><br>score '.$row_score['score'];
+//                                         echo  '<br>score sum '.$studentScore;
+                                         $maxScoreSum += $row_score['max_score'];
+//                                         echo  '<br>max '.$row_score['max_score'] ;
+//                                         echo  '<br>max sum '.$maxScoreSum;
+                                 } 
+                 $finalScore = round (($studentScore / $maxScoreSum)*100,2);
+                 $n++;
+
+                 $finalsum += $finalScore;
+
+                 }
+                   
+                 $final = round(($finalsum/$n),2);      
+                echo $final.'%' ?>
 												</td>
 											</tr>
 										</table>
@@ -781,7 +816,6 @@ if (!empty ($_GET['student'])) {
               $finalScore = 0;
                  $sql_score = 'SELECT * FROM '.$t_lpiv.' as lp_item_view INNER JOIN '.$t_lpi.' as lp_item INNER JOIN '.$t_lpv.' as lp_view ON lp_item.id=lp_item_view.lp_item_id AND (lp_item.item_type="student_publication" OR lp_item.item_type="quiz") AND lp_item.lp_id='.$learnpath['id'].' AND lp_view.user_id='.$_GET['student'].' AND lp_view.lp_id = ' .$learnpath['id']. ' AND lp_view.id=lp_item_view.lp_view_id';
                  $query_score = Database::query($sql_score,__FILE__,__LINE__);
-                 $num_score = Database :: num_rows($sql_score);
                  while ($row_score = Database :: fetch_array($query_score)) {
                  //if($row_score['score'] == null){$row_score['score']=0;}
                  $studentScore +=  $row_score['score'];
@@ -791,7 +825,8 @@ if (!empty ($_GET['student'])) {
 //                 echo  '<br>max '.$row_score['max_score'];
 //                 echo  '<br>max sum '.$maxScoreSum;
                  } 
-                 $finalScore = ($studentScore / $maxScoreSum)*100;
+                 $finalScore = round (($studentScore / $maxScoreSum)*100,2);
+                 $finalScore .= "%";
                  echo  $finalScore;
                  
                  
@@ -901,8 +936,6 @@ if (!empty ($_GET['student'])) {
 															FROM $tbl_stats_exercices AS ex
 															WHERE  ex.exe_cours_id = '" . $info_course['code'] . "'
 															AND ex.exe_exo_id = " . $exercices['id'] . "
-															AND orig_lp_id = 0
-															AND orig_lp_item_id = 0
                                                                                                                         AND status <> 'incomplete'
 															AND exe_user_id='" . Database :: escape_string($is_student) . "'";
 					$result_essais = Database::query($sql_essais, __FILE__, __LINE__);
@@ -913,9 +946,7 @@ if (!empty ($_GET['student'])) {
 														 WHERE exe_user_id = " . Database :: escape_string($is_student) . "
 														 AND exe_cours_id = '" . $info_course['code'] . "'
 														 AND exe_exo_id = " . $exercices['id'] . "
-														 AND orig_lp_id = 0
-														 AND orig_lp_item_id = 0
-                                                                                                                 AND status <> 'incomplete'
+	                                                           AND status <> 'incomplete'
 														 ORDER BY exe_date DESC LIMIT 1";
 
 					$result_score = Database::query($sql_score, __FILE__, __LINE__);

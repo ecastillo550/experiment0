@@ -49,6 +49,7 @@ include_once api_get_path(LIBRARY_PATH)."fckeditor/fckeditor.php";
 require_once api_get_path(LIBRARY_PATH).'formvalidator/FormValidator.class.php';
 require_once api_get_path(LIBRARY_PATH).'tracking.lib.php';
 require_once api_get_path(LIBRARY_PATH).'fileUpload.lib.php';
+require_once api_get_path(LIBRARY_PATH).'course.lib.php';
 
 // Incomming variables
 $course_db['db_name'] = Database::get_current_course_database();
@@ -68,6 +69,9 @@ $htmlHeadXtra[] = '
 	}
     </style>
 ';
+
+$htmlHeadXtra[] = AnnouncementManager::user_group_filter_javascript();
+$htmlHeadXtra[] = AnnouncementManager::to_javascript();
 
 // get actions
 $actions = array('listing', 'add', 'view', 'edit', 'delete');
@@ -160,6 +164,63 @@ switch ($action) {
       goto announcement;
 
       } else {
+     $sent_to_array['users'] = AnnouncementManager::get_course_users();
+     $sent_to_array['groups'] = AnnouncementManager::get_course_groups();
+        
+//      // The receivers: groups
+// 			$course_groups = CourseManager::get_group_list_of_course(api_get_course_id(), intval($this->session_id));
+// 			foreach ( $course_groups as $key => $group ) {
+// 				$receivers ['G' . $key] = '-G- ' . $group ['name'];
+// 			}
+// 			// The receivers: users
+// 			$course_users = CourseManager::get_user_list_from_course_code(api_get_course_id(), intval($this->session_id) == 0 , intval($this->session_id));
+// 			foreach ( $course_users as $key => $user ) {
+// 				$receivers ['U' . $key] = $user ['lastname'] . ' ' . $user ['firstname'];
+// 			}			
+//       $defaults ['send_to'] ['receivers'] = 0;
+//       $defaults['title'] = $announcementInfo['announcement_title'];
+//             $defaults['description'] = $announcementInfo['announcement_content'];
+// 			
+//             if (!empty($announcementInfo['to_user_id'])) {
+//                 $defaults['send_to'] ['receivers'] = 1;
+//                 $user_group_ids = $this->get_announcement_dest($this->announcement_id);
+//             }
+//             else if(empty($announcementInfo['to_user_id']) && $announcementInfo['visibility'] == 0){
+//                 $defaults['send_to'] ['receivers'] = -1;
+//             }
+//             else {
+//                 $defaults['send_to'] ['receivers'] = 0;
+//             }
+// 
+//             foreach ($user_group_ids['to_user_id'] as $key=>$user_id){
+//                 $defaults['send_to']['to'][] = 'U'.$user_id;
+//             }
+// 
+//             foreach ($user_group_ids['to_group_id'] as $key=>$group_id){
+//                 $defaults['send_to']['to'][] = 'G'.$group_id;
+//             }
+//         }
+// 	else {            
+//             if (isset($_GET['remind_inactive'])) {
+//                 $defaults['send_to']['receivers'] = 1;
+//                 $defaults['title'] = sprintf(get_lang('RemindInactiveLearnersMailSubject'),api_get_setting('siteName'));
+//                 $defaults['content'] = sprintf(get_lang('RemindInactiveLearnersMailContent'),api_get_setting('siteName'), 7);
+//                 $defaults['send_to']['to'][] = 'U'.intval($_GET['remind_inactive']);
+//             } 
+//             elseif (isset($_GET['remindallinactives']) && $_GET['remindallinactives'] == 'true') { 
+//                 $defaults['send_to']['receivers'] = 1;
+//                 $since = isset($_GET['since']) ? intval($_GET['since']) : 6;
+//                 $to = Tracking :: get_inactives_students_in_course($_course['id'],$since, api_get_session_id());
+//                 foreach($to as $user) {
+//                         if (!empty($user)) {
+//                                 $defaults['send_to']['to'][] = 'U'.$user;
+//                         }
+//                 }
+//                 $defaults['title'] = sprintf(get_lang('RemindInactiveLearnersMailSubject'),api_get_setting('siteName'));
+//                 $defaults['content'] = sprintf(get_lang('RemindInactiveLearnersMailContent'),api_get_setting('siteName'),$since);
+//             }
+// 	}  
+      
       echo "<form action='announcements.php?posto=yes&action=add&cidReq=".api_get_course_path()."' method='post' enctype='multipart/form-data'>
       Titulo del anuncio <input type='text' value='' name='emailtitle'><div style='width: 900px; position: relative;'>" ;
       
@@ -193,6 +254,12 @@ switch ($action) {
           goto announcement;       
       
       } else {
+      
+      $to = AnnouncementManager::load_edit_users("announcement", $announcement_id);
+      
+      //$sent_to_array = AnnouncementManager::sent_to("announcement", $announcement_id);
+      
+      AnnouncementManager::sent_to_form($to);
       
       $announcement = array();
       $announcement = AnnouncementManager::display_announcement_array($announcement_id);
