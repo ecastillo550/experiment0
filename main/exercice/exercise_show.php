@@ -1697,27 +1697,27 @@ if (is_array($arrid) && is_array($arrmarks)) {
 	$marksid = implode(",",$arrmarks);
 }
 
-echo '<script>
-$(document).ready(function() {
-	$("input[name=quizstatus]").change(function() {  
-   showmailcontent();
-});
-function showmailcontent() {
-	var quizstatus = $("input[name=quizstatus]:checked").val();	
-	if(quizstatus == "success")
-	{
-	$("#successmailcontent").show();
-	$("#failuremailcontent").hide();
-	}
-	else
-	{
-	$("#failuremailcontent").show();
-	$("#successmailcontent").hide();
-	}
-}
-});
+// echo '<script>
+// $(document).ready(function() {
+// 	$("input[name=quizstatus]").change(function() {  
+//    showmailcontent();
+// });
+// function showmailcontent() {
+// 	var quizstatus = $("input[name=quizstatus]:checked").val();	
+// 	if(quizstatus == "success")
+// 	{
+// 	$("#successmailcontent").show();
+// 	$("#failuremailcontent").hide();
+// 	}
+// 	else
+// 	{
+// 	$("#failuremailcontent").show();
+// 	$("#successmailcontent").hide();
+// 	}
+// }
+// });
 
-</script>';
+//</script>';
 $is_allowedToEdit = api_is_allowed_to_edit();
 echo '<div style="padding:0px 0px 20px 0px;">';
 if ($is_allowedToEdit) {
@@ -1769,10 +1769,6 @@ if ($is_allowedToEdit) {
 			if($_REQUEST['action'] == 'qualify' || $origin == 'tracking_course'){			
 		?>
 		<div><table><tr><td valign="top"><?php echo get_lang('Notes'); ?> : </td><td><textarea name="notes" rows="5" cols="75"></textarea></td></tr>
-		<tr><td colspan="2"><input name="send_mail" type="checkbox" /><?php echo get_lang('SendMail'); ?></td></tr></table></div>
-		<div><table><tr><td><label><input type="radio" name="quizstatus" value="success" checked /><?php echo get_lang('Showsuccesscontent'); ?></label></td><td><label><input type="radio" name="quizstatus" value="failure" /><?php echo get_lang('Showfailurecontent'); ?></label></td></tr></table></div><br/>	
-		<div id="successmailcontent" style="display:;"><?php echo get_lang('Dontedittext'); ?><br/><textarea name="successcontent" rows="10" cols="75"><?php echo $success_content; ?></textarea></div>
-		<div id="failuremailcontent" style="display:none;"><?php echo get_lang('Dontedittext'); ?><br/><textarea name="failurecontent" rows="10" cols="75"><?php echo $failure_content; ?></textarea></div>
 		<button type="submit" class="save" value="<?php echo get_lang('Ok'); ?>" onclick="getFCK('<?php echo $strids; ?>','<?php echo $marksid; ?>');"><?php echo get_lang('FinishTest'); ?></button>
 		<?php
 		}
