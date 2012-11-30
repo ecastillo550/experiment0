@@ -56,7 +56,7 @@ if (!class_exists('FreeAnswer')):
    $form->addElement('html', '<div id="leftcontainer" class="quiz_answer_small_squarebox">');
 // $form->addElement('text', 'weighting', get_lang('Weighting'), 'size="5"');
 // $form->addElement('html_editor', 'open_answer', get_lang('OpenAnswer'), 'cols="55" rows="10"');
-   $form->addElement('html_editor', 'open_answer',$openanswer_lang_var,'style="vertical-align:middle"',array('ToolbarSet' => 'TestProposedAnswer', 'Width' => '90%', 'Height' => '200'));
+// $form->addElement('html_editor', 'open_answer',$openanswer_lang_var,'style="vertical-align:middle"',array('ToolbarSet' => 'TestProposedAnswer', 'Width' => '90%', 'Height' => '200'));
 // $form->addElement('html', '<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>');
 // $form->addElement('html', '<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>');
 
