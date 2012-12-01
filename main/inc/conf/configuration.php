@@ -48,7 +48,7 @@ $_configuration['single_database']    					= false;
 // Prefix for course tables (IF NOT EMPTY, can be replaced by another prefix, else leave empty)
 $_configuration['table_prefix']  						= '';
 // Separator between database and table name (DO NOT MODIFY THIS)
-$_configuration['db_glue'] 								= '`.`';
+$_configuration['db_glue'] 								= '.';
 // prefix all created bases (for courses) with this string
 $_configuration['db_prefix']       						= 'dokeos_';
 // main Dokeos database
@@ -66,7 +66,7 @@ $_configuration['user_personal_database']   			='dokeos_user';
 //============================================================================
 
 // URL to the root of your Dokeos installation, example: http://www.mydokeos.com/
-$_configuration['root_web'] 							= 'http://172.16.0.79';
+$_configuration['root_web'] 							= 'http://192.168.1.120';
 
 // Path to the webroot of system, example: /var/www/
 $_configuration['root_sys'] 							= 'C:/xampp/dep-vanilla/';
