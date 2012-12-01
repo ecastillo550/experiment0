@@ -210,9 +210,10 @@ foreach ($courses as $enreg) {
 			<?php
       
       $tbl_course_lp = str_replace("`" , "" , $tbl_course_lp);
+      $glue = str_replace("`" , "" , Database::get_database_glue());
       
 				$last_connection = Tracking :: get_last_connection_date_on_the_course($_user['user_id'], $course_info['code']);
-				$sql_learnpath = "SELECT lp.name,lp.id FROM ".Database::get_course_table_prefix().$course_info['db_name'].Database::get_database_glue().$tbl_course_lp." AS lp";
+				$sql_learnpath = "SELECT lp.name,lp.id FROM ".Database::get_course_table_prefix().$course_info['db_name'].$glue.$tbl_course_lp." AS lp";
 				$result_learnpath = Database::query($sql_learnpath, __FILE__, __LINE__);
 				if (Database::num_rows($result_learnpath) > 0) {
 					while($learnpath = Database::fetch_array($result_learnpath)) {
@@ -321,14 +322,14 @@ foreach ($courses as $enreg) {
 
 			<?php
 
-				$sql = 'SELECT visibility FROM '.Database::get_course_table_prefix().$course_info['db_name'].Database::get_database_glue().TABLE_TOOL_LIST.' WHERE name="quiz"';
+				$sql = 'SELECT visibility FROM '.Database::get_course_table_prefix().$course_info['db_name'].$glue.TABLE_TOOL_LIST.' WHERE name="quiz"';
 				$result_visibility_tests = Database::query($sql, __FILE__, __LINE__);
 
         $tbl_course_quiz = str_replace("`" , "" , $tbl_course_quiz);
 
 				if (Database::result($result_visibility_tests, 0, 'visibility') == 1) {
 					$sql_exercices = "	SELECT quiz.title,id, results_disabled
-									FROM ".Database::get_course_table_prefix().$course_info['db_name'].Database::get_database_glue().$tbl_course_quiz." AS quiz
+									FROM ".Database::get_course_table_prefix().$course_info['db_name'].$glue.$tbl_course_quiz." AS quiz
 									WHERE active='1'";
 
 					$result_exercices = Database::query($sql_exercices, __FILE__, __LINE__);

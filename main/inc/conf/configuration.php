@@ -48,7 +48,7 @@ $_configuration['single_database']    					= false;
 // Prefix for course tables (IF NOT EMPTY, can be replaced by another prefix, else leave empty)
 $_configuration['table_prefix']  						= '';
 // Separator between database and table name (DO NOT MODIFY THIS)
-$_configuration['db_glue'] 								= '.';
+$_configuration['db_glue'] 								= '`.`';
 // prefix all created bases (for courses) with this string
 $_configuration['db_prefix']       						= 'dokeos_';
 // main Dokeos database
