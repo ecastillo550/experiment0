@@ -738,6 +738,7 @@ if (is_array($list) && count($list) > 0){
 										$output .= '<td><img src="' . api_get_path(WEB_IMG_PATH) . 'quiz_na.gif" alt="'.api_convert_encoding(get_lang('ShowAndQualifyAttempt'), $lp_charset, $dokeos_charset).'" title="'.api_convert_encoding(get_lang('ShowAndQualifyAttempt'), $lp_charset, $dokeos_charset).'"></td>';
 									} else {
 										$output .= '<td><a href="../exercice/exercise_show.php?origin=tracking_course&myid='.$my_orig_lp.'&my_lp_id='.$my_orig_lp_item.'&id=' . $my_exe_id . '&cidReq=' . $course_code . '&student=' . $student_id . '&total_time='.$mytime.'&my_exe_exo_id='.$my_exo_exe_id.$from_link.' " target="_parent"><img src="' . api_get_path(WEB_IMG_PATH) . 'quiz.gif" alt="'.api_convert_encoding(get_lang('ShowAndQualifyAttempt'), $lp_charset, $dokeos_charset).'" title="'.api_convert_encoding(get_lang('ShowAndQualifyAttempt'), $lp_charset, $dokeos_charset).'"></a></td>';
+                    $output .= '<td><a onclick=\'javascript:if(!confirm("Please confirm your choice")) return false;\' href="../myspace/lp_tracking.php?action=stats&origin=tracking_course&lp_id='.$_GET['lp_id'].'&id=' . $my_exe_id . '&cidReq=' . $course_code . '&course=' . $course_code . '&my_exe_exo_id='.$my_exo_exe_id.$from_link.'&delete=yes&student_id='.$_GET['student_id'].' " target="_parent"><img src="'.api_get_path(WEB_PATH).'/main/img/button_delete.gif" alt="borrar"></a></td>';
 									}
                   
 

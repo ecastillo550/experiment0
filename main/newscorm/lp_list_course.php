@@ -381,6 +381,7 @@ AND lpv.user_id=exercices.exe_user_id
 AND lpiv.score=exercices.exe_result
 AND attempt.flag =0
 AND exercices.status= \"\"
+AND lpi.item_type = ('student_publication' OR 'quiz')
 AND lpv.user_id=".$student_ids[$student_id_counterloop].' 
 GROUP BY exercices.exe_id';
 
