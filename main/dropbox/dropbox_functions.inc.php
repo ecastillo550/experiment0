@@ -528,7 +528,9 @@ function display_add_form()
 	<form method="post" action="index.php?view_received_category=<?php echo Security::remove_XSS($_GET['view_received_category']); ?>&view_sent_category=<?php echo Security::remove_XSS($_GET['view_sent_category']); ?>&view=<?php echo Security::remove_XSS($_GET['view']); ?>&<?php echo "origin=$origin"."&".api_get_cidreq(); ?>" enctype="multipart/form-data" onsubmit="return checkForm(this)">
 
 	<div class="row"><div class="form_header"><?php echo get_lang('UploadNewFile'); ?></div></div>
-
+  <?php $sent_category = Security::remove_XSS($_GET['view_sent_category']); 
+        echo '<input type="hidden" name="sent_category" value="'.$sent_category.'" />';
+  ?>
 	<div class="row">
 		<div class="label">
 			<span class="form_required">*</span><?php echo dropbox_lang("uploadFile")?>:
@@ -1040,7 +1042,7 @@ function store_add_dropbox()
 		}
 	}
 
-	new Dropbox_SentWork( $_user['user_id'], $dropbox_title, $_POST['description'], strip_tags($_POST['authors']), $dropbox_filename, $dropbox_filesize, $new_work_recipients);
+	new Dropbox_SentWork( $_user['user_id'], $dropbox_title, $_POST['description'], $_POST['sent_category'], $dropbox_filename, $dropbox_filesize, $new_work_recipients);
 
 	Security::clear_token();
     return get_lang('FileUploadSucces');

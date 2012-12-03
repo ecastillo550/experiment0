@@ -55,6 +55,7 @@ class Dropbox_Work {
 	public $last_upload_date;
 	public $isOldWork;
 	public $feedback_date, $feedback;  // RH: Feedback
+  public $sent_category;
 
 	/**
 		* Constructor calls private functions to create a new work or retreive an existing work from DB
@@ -88,8 +89,9 @@ class Dropbox_Work {
 	 *
 	 * @todo 	$author was originally a field but this has now been replaced by the first and lastname of the uploader (to prevent anonymous uploads)
 	 * 			As a consequence this parameter can be removed
+	 * 			Gracias a eso ahora puedo poner aqui la categoria a donde va el archivo (carpeta)   
 		*/
-	function _createNewWork ($uploader_id, $title, $description, $author, $filename, $filesize) {
+	function _createNewWork ($uploader_id, $title, $description, $sent_category, $filename, $filesize) {
 		global $_user;
 
 		// Do some sanity checks
@@ -106,6 +108,7 @@ class Dropbox_Work {
 		$this->description = $description;
 		$this->author = api_get_person_name($_user['firstName'], $_user['lastName']);
 		$this->last_upload_date = date("Y-m-d H:i:s",time());
+    $this->sent_category = $sent_category;
 
 		// Check if object exists already. If it does, the old object is used
 		// with updated information (authors, descriptio, upload_date)
@@ -133,7 +136,7 @@ class Dropbox_Work {
 		} else {
 			$this->upload_date = $this->last_upload_date;
 			$sql="INSERT INTO ".dropbox_cnf("tbl_file")."
-				(uploader_id, filename, filesize, title, description, author, upload_date, last_upload_date, session_id)
+				(uploader_id, filename, filesize, title, description, author, upload_date, last_upload_date, session_id, cat_id)
 				VALUES ('".addslashes($this->uploader_id)."'
 						, '".addslashes($this->filename)."'
 						, '".addslashes($this->filesize)."'
@@ -143,6 +146,7 @@ class Dropbox_Work {
 						, '".addslashes($this->upload_date)."'
 						, '".addslashes($this->last_upload_date)."'
 						, ".intval($_SESSION['id_session'])."
+            , '".intval($this->sent_category)."'
 						)";
 
         	$result = Database::query($sql,__FILE__,__LINE__);

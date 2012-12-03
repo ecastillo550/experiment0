@@ -332,6 +332,7 @@ if (!$_GET['view'] OR $_GET['view']=='sent' OR $dropbox_cnf['sent_received_tabs'
 		if ($view_dropbox_category_sent<>0) {
 			echo get_lang('CurrentlySeeing').': <strong>'.$dropbox_categories[$view_dropbox_category_sent]['cat_name'].'</strong> ';
 			echo '<a href="'.api_get_self().'?'.api_get_cidreq().'&view_received_category='.Security::remove_XSS($_GET['view_received_category']).'&amp;view_sent_category=0&amp;view='.Security::remove_XSS($_GET['view']).'">'.Display::return_icon('pixel.gif',get_lang('Up'),array('class' => 'toolactionplaceholdericon toolactionfolderup')).' '.get_lang('Root')."</a>\n";
+      echo "<a href=\"".api_get_self()."?".api_get_cidreq()."&view=".Security::remove_XSS($_GET['view'])."&amp;action=add&view_sent_category=".$_GET['view_sent_category']."\">".Display::return_icon('pixel.gif',get_lang('UploadNewFile'),array('class'=>'toolactionplaceholdericon toolactionupload')).' '.get_lang('UploadNewFile')."</a>&nbsp;\n";
 		} else {
 			echo "<a href=\"".api_get_self()."?".api_get_cidreq()."&view=".Security::remove_XSS($_GET['view'])."&amp;action=addsentcategory\">".Display::return_icon('pixel.gif',get_lang('AddNewCategory'),array('class' => 'toolactionplaceholdericon toolactioncreatefolder'))." ".get_lang('AddNewCategory')."</a>\n";
 		}	
@@ -355,7 +356,7 @@ if (!$_GET['view'] OR $_GET['view']=='sent' OR $dropbox_cnf['sent_received_tabs'
 				echo "<a href=\"".api_get_self()."?".api_get_cidreq()."&view=".Security::remove_XSS($_GET['view'])."&amp;action=addsentcategory\">".Display::return_icon('pixel.gif',get_lang('AddNewCategory'), array('class'=>'toolactionplaceholdericon toolactioncreatefolder'))." ".get_lang('AddNewCategory')."</a>\n";
 			}	
 			if (empty($_GET['view_sent_category'])) {
-			echo "<a href=\"".api_get_self()."?".api_get_cidreq()."&view=".Security::remove_XSS($_GET['view'])."&amp;action=add\">".Display::return_icon('pixel.gif',get_lang('UploadNewFile'),array('class'=>'toolactionplaceholdericon toolactionupload')).' '.get_lang('UploadNewFile')."</a>&nbsp;\n";
+			echo "<a href=\"".api_get_self()."?".api_get_cidreq()."&view=".Security::remove_XSS($_GET['view'])."&amp;action=add&view_sent_category=".$_GET['view_sent_category']."\">".Display::return_icon('pixel.gif',get_lang('UploadNewFile'),array('class'=>'toolactionplaceholdericon toolactionupload')).' '.get_lang('UploadNewFile')."</a>&nbsp;\n";
 			}
 			echo '</div>'; 	
 		 }

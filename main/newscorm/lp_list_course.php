@@ -407,6 +407,7 @@ GROUP BY exercices.exe_id';
     }
 }     
 
+//Assignmients
     $sql_ann = 'SELECT * From  '.$t_student_pub.' as ann WHERE ann.qualificator_id=0 AND ann.filetype <> "folder"';
     $query_ann = Database::query($sql_ann,__FILE__,__LINE__);
     $num_ann = Database :: num_rows($query_ann);
