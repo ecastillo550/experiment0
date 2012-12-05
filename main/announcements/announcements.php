@@ -19,6 +19,11 @@ functionality that has been removed and will not be available in Dokeos 2.0
 functionality that has been removed and has to be re-added for Dokeos 2.0
 * send by email + configuration setting for the platform admin: never, always, let course admin decide
 * configruation of the number of items that have to appear (jcarousel)
+* 
+* (Erick)
+* Even though this is an old file, we will use announcement.inc.php in library path so we can use the
+* attatchment functions for our release.
+*           AnnouncementManager::Function();
 */
 
 // variables that will be converted into platform settings
@@ -47,6 +52,7 @@ require_once(api_get_path(LIBRARY_PATH).'debug.lib.inc.php');
 require_once(api_get_path(LIBRARY_PATH).'tracking.lib.php');
 require_once(api_get_path(LIBRARY_PATH).'fckeditor/fckeditor.php');
 require_once(api_get_path(LIBRARY_PATH).'fileUpload.lib.php');
+require_once(api_get_path(LIBRARY_PATH).'announcements.inc.php');
 require_once (api_get_path ( LIBRARY_PATH ) . 'formvalidator/FormValidator.class.php');
 
 // setting the tabs
@@ -492,7 +498,7 @@ function delete_announcement ($announcement_id){
 function display_announcement_form($input_values){
 	if (api_is_allowed_to_edit(false,true)){
 		// initiate the object
-		$form = new FormValidator ( 'announcement_form', 'post', $_SERVER ['REQUEST_URI'] );
+		$form = new FormValidator ( 'announcement_form', 'post', $_SERVER ['REQUEST_URI'] , '', '' ,'enctype="multipart/form-data');
 		$renderer = & $form->defaultRenderer();
 	
 		// the header for the form
@@ -585,7 +591,7 @@ function display_announcement_form($input_values){
 			
 		}
 		
-
+    $form->addElement ( 'file', 'user_upload', '', 'size=60');
 		$form->addElement ( 'style_submit_button', 'submit_announcement', get_lang ( 'SaveAnnouncement' ) ,'class="save" style="float: right; cursor: default;"');
 
 
@@ -642,6 +648,13 @@ function store_announcement($values){
 			$last_id = mysql_insert_id ();
 			// store in item_property (visibility, insert_date, target users/groups, visibility timewindow, ...)
 			store_item_property ( $values, $last_id, 'AnnouncementAdded' );
+      
+//Erick changes...  adding attatchments module.
+// Format add_announcement_attachment_file($announcement_id, $file_comment, $file) 
+      $file = $_FILES['user_upload'];
+
+      AnnouncementManager::add_announcement_attachment_file($last_id, '', $file);
+
 		} else {
 		// editing an announcement
 			$last_id = $values['announcement_id'];
@@ -794,6 +807,7 @@ function display_announcement($id=''){
 	} else {
 		$announcements = get_announcements();
 		$announcement = $announcements[$_GET['ann_id']];
+    $ann_attatchment = AnnouncementManager::get_attachment($_GET['ann_id']);
 	}
 
 	echo '<div class="announcement_title"><h2>'.$announcement['title'].'</h2></div>';
@@ -808,7 +822,13 @@ function display_announcement($id=''){
 	}else{
 		echo  '	<div class="announcement_content" style="height: 322px;overflow: auto;">'.nl2br($announcement['content']).'</div>';	
 	}	
-	
+  // show attachment list
+  $attachment_list = array();
+  $attachment_list = AnnouncementManager::get_attachment($_GET['ann_id']);
+	$attachment_icon = '';
+                if (count($attachment_list)>0) {
+                   echo ' <a href="'.api_get_path(WEB_COURSE_PATH).api_get_course_path().'/upload/announcements/'.$attachment_list['path'].'" target="_blank">'.Display::return_icon('attachment.gif','Attachment') . '</a><br>';
+                }
 	echo  '</div>';
 	if(api_is_allowed_to_edit()){
 		echo  '<div class="announcements_actions" style="padding-top:0px">';
