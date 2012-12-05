@@ -827,7 +827,13 @@ function display_announcement($id=''){
   $attachment_list = AnnouncementManager::get_attachment($_GET['ann_id']);
 	$attachment_icon = '';
                 if (count($attachment_list)>0) {
-                   echo ' <a href="'.api_get_path(WEB_COURSE_PATH).api_get_course_path().'/upload/announcements/'.$attachment_list['path'].'" target="_blank">'.Display::return_icon('attachment.gif','Attachment') . '</a><br>';
+                      $realname = $attachment_list['path'];
+                      $user_filename = $attachment_list['filename'];
+                      $full_file_name = 'download.php?file=' . $realname;
+                      echo '<br/>';
+                      echo Display::return_icon('attachment.gif', get_lang('Attachment'));
+                      echo '<a href="' . $full_file_name . ' "> ' . $user_filename . ' </a>';
+       //               echo ' <a href="'.api_get_path(WEB_COURSE_PATH).api_get_course_path().'/upload/announcements/'.$attachment_list['path'].'" target="_blank">'.Display::return_icon('attachment.gif','Attachment') . '</a><br>';
                 }
 	echo  '</div>';
 	if(api_is_allowed_to_edit()){

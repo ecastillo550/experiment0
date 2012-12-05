@@ -38,11 +38,11 @@
 
 session_cache_limiter('public');
 
-require_once '../inc/global.inc.php';
-$this_section=SECTION_COURSES;
+require_once('../inc/global.inc.php');
+//$this_section=SECTION_COURSES;
 
-require_once api_get_path(LIBRARY_PATH).'document.lib.php';
-require_once 'announcements.inc.php';
+require_once(api_get_path(LIBRARY_PATH).'document.lib.php');
+
 // IMPORTANT to avoid caching of documents
 header('Expires: Wed, 01 Jan 1990 00:00:00 GMT');
 header('Cache-Control: public');
@@ -89,5 +89,5 @@ $row= Database::fetch_array($result);
 $title = str_replace(' ','_', $row['filename']);
 DocumentManager::file_send_for_download($full_file_name,TRUE, $title);
 
-exit;
+exit; 
 ?>
