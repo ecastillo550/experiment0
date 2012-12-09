@@ -36,7 +36,7 @@
   // Html header for the Author tool
  	$html =	"<div id='left'>" .										// home button
 			"<a id=\"back2home\" class='course_main_home_button' width='42px' height='37px' href=".api_get_path(WEB_COURSE_PATH).$_course['path'].'/index.php'.$param.">";
- 	$html .= '<img src="'.api_get_path(WEB_IMG_PATH).'spacer.gif" width="42px" height="37px" target="_self" onclick="window.parent.API.save_asset();" alt="'.$altHome.'" title="'.$altHome.'" /></a></div>';
+ 	$html .= '<img src="'.api_get_path(WEB_IMG_PATH).'spacer.gif" width="42px" height="37px" target="_parent" onclick="window.parent.API.save_asset();" alt="'.$altHome.'" title="'.$altHome.'" /></a></div>';
  	$html.=	"<div id='courseTitle'>" .								// Title
  				"<div class='container'>".$title."</div></div>".
  				"<div id='bg_end_title'></div>".

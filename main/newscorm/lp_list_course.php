@@ -358,6 +358,7 @@ if (Database :: num_rows($res) > 0) {
 	$view = $myrow[0];
 }
 
+$t_lp = Database :: get_course_table(TABLE_LP_MAIN, $info_course['db_name']);
 $t_lp_view = Database :: get_course_table(TABLE_LP_VIEW, $info_course['db_name']);
 $t_lp_item = Database :: get_course_table(TABLE_LP_ITEM, $info_course['db_name']);
 $t_student_pub = Database :: get_course_table(TABLE_STUDENT_PUBLICATION, $info_course['db_name']);
@@ -373,15 +374,15 @@ for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $stu
     $sql_needsgrading = "SELECT DISTINCT exercices.exe_id, exercices.exe_user_id, exercices.exe_result, lpiv.total_time
 ,exercices.exe_exo_id, lpi.title, lpi.lp_id
 FROM ".Database::get_statistic_database().".track_e_attempt AS attempt, ".Database::get_statistic_database().".track_e_exercices AS exercices,
-$t_lp_view As lpv, $t_lp_item As lpi, $TBL_LP_ITEM_VIEW as lpiv
+$t_lp_view As lpv, $t_lp_item As lpi, $TBL_LP_ITEM_VIEW as lpiv, $t_lp as lp
 WHERE exercices.exe_id = attempt.exe_id
+AND lpi.item_type = 'quiz'  
+AND attempt.course_code = '".api_get_course_id()."'
 AND lpv.id=lpiv.lp_view_id
 AND lpi.id=lpiv.lp_item_id
 AND lpv.user_id=exercices.exe_user_id
-AND lpiv.score=exercices.exe_result
 AND attempt.flag =0
 AND exercices.status= \"\"
-AND (lpi.item_type ='student_publication' OR lpi.item_type ='quiz')
 AND lpv.user_id=".$student_ids[$student_id_counterloop].' 
 GROUP BY exercices.exe_id';
 
@@ -395,10 +396,10 @@ GROUP BY exercices.exe_id';
       $user_id = api_get_user_id();
       echo  "<tr class='row_odd'>
                  <td>
-                   " . $info_user['name'] . " 
+                   " . $info_user['name']  ." 
                 </td>
                 <td>
-                   " . $row_needsgrading['title'] . " 
+                   Quiz : " . $row_needsgrading['title'] . " 
                 </td>
                 <td>
                  <a href='../exercice/exercise_show.php?origin=tracking_course&myid=". $user_id ."&id=".$row_needsgrading['exe_id']."&cidReq=$course&student=".$row_needsgrading['exe_user_id']."&total_time=".$row_needsgrading['total_time']."&my_exe_exo_id=".$row_needsgrading['exe_exo_id']."&my_lp_id=".$row_needsgrading['lp_id']."'>".''.'  <img title="Show and mark attempt" alt="Show and mark attempt" src="../../main/img/quiz.gif">'."</a><br>
@@ -407,7 +408,6 @@ GROUP BY exercices.exe_id';
     }
 }     
 
-//Assignmients
     $sql_ann = 'SELECT * From  '.$t_student_pub.' as ann WHERE ann.qualificator_id=0 AND ann.filetype <> "folder"';
     $query_ann = Database::query($sql_ann,__FILE__,__LINE__);
     $num_ann = Database :: num_rows($query_ann);
@@ -416,8 +416,14 @@ GROUP BY exercices.exe_id';
                  <td>
                    " . $row_ann['author'] . " 
                 </td>
-                <td>
-                  " . $row_ann['title']  ."
+                <td>";
+                   if($row_ann['title'] == ""){
+                        echo "Assignment : No file attatched";
+                  }
+                  else {
+                        echo "Assignment : " . $row_ann['title'];
+                  }  
+                  echo "
                 </td>
                 <td>
                  <a href='".api_get_path(WEB_PATH)."main/core/views/work/index.php?cidReq=".api_get_course_path()."&action=correct_paper&id=".$row_ann['id']."&assignment_id=".$row_ann['parent_id']."'><img title='Show and mark attempt' alt='Show and mark attempt' src='../../main/img/quiz.gif'></a><br>
@@ -643,10 +649,10 @@ for($student_id_counterloop = 0 ; $student_id_counterloop< $count_students; $stu
 						$from ='&from=myspace';
 					}
 ?>
-					<a href="../myspace/charts/learnpath.ajax.php?width=900&height=500&cidReq=<?php echo $course; ?>&course=<?php echo $course; ?>&lp_id=<?php echo $learnpath['id'] ?>&user_id=<?php echo intval($student_ids[$student_id_counterloop]) ?>" class="thickbox" title="<?php echo sprintf(get_lang('CompareUsersOnLearnpath'),$learnpath['name']) ?>">
+					<a href="<?php  api_get_path(WEB_CODE_PATH); ?>../mySpace/charts/learnpath.ajax.php?width=900&height=500&cidReq=<?php echo $course; ?>&course=<?php echo $course; ?>&lp_id=<?php echo $learnpath['id'] ?>&user_id=<?php echo intval($student_ids[$student_id_counterloop]) ?>" class="thickbox" title="<?php echo sprintf(get_lang('CompareUsersOnLearnpath'),$learnpath['name']) ?>">
 						<?php echo Display::return_icon('pixel.gif',get_lang('AccessDetails'), array('class' => 'actionplaceholdericon actionstatistics')) ?>
 					</a>
-					<a href="../myspace/lp_tracking.php?cidReq=<?php echo Security::remove_XSS($_GET['cidReq']); ?>&course=<?php echo $course; ?>&origin=<?php echo "tracking_course"; ?>&lp_id=<?php echo $learnpath['id']?>&student_id=<?php echo $student_ids[$student_id_counterloop]; ?>">
+					<a href="<?php  api_get_path(WEB_CODE_PATH); ?>../mySpace/lp_tracking.php?cidReq=<?php echo Security::remove_XSS($_GET['cidReq']); ?>&course=<?php echo $course; ?>&origin=<?php echo "tracking_course"; ?>&lp_id=<?php echo $learnpath['id']?>&student_id=<?php echo $student_ids[$student_id_counterloop]; ?>">
 						<?php echo Display::return_icon('pixel.gif',get_lang('AccessDetails'), array('class' => 'actionplaceholdericon actionstatisticsdetails')) ?>
 					</a>
 					<?php

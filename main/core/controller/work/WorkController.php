@@ -166,7 +166,7 @@ class WorkController extends Controller {
 //			$this->listing();
 // ----------------------------------------------------
 // Hardlink para evitar mostrar lista
-      header('Location: '.api_get_path(WEB_PATH).'main/core/views/work/index.php?'.api_get_cidreq().'&action=view_papers&assignment_id='.$_POST['assignment_id'] );	
+     header('Location: '.api_get_path(WEB_PATH).'main/core/views/work/index.php?'.api_get_cidreq().'&action=view_papers&assignment_id='.$_POST['assignment_id'] );	
 		}
 		else {
 			$this->model->assignment_id		 = $this->assignmentId;
@@ -243,7 +243,10 @@ class WorkController extends Controller {
 			$this->view->set_template('correct_paper');
 			$this->view->render();
 		}
-		$this->view_papers();
+		//$this->view_papers();
+          
+  // Goddamn redirection
+  header('Location: '.api_get_path(WEB_CODE_PATH).'newscorm/lp_controller.php?action=course&'.api_get_cidreq());
 	}
 
 	public function move_form($paperId) {

@@ -46,7 +46,7 @@
 		$param = '';
 	}
 	$html =	"<div id='left'>";
-	$html .= '<a id="back2home" class="course_main_home_button" href="lp_controller.php?'.api_get_cidreq().'&action=return_to_course_homepage'.$param.'" target="_self" onclick="window.parent.API.save_asset();" alt="'.$altHome.'" title="'.$altHome.'">';
+	$html .= '<a id="back2home" class="course_main_home_button" href="lp_controller.php?'.api_get_cidreq().'&action=return_to_course_homepage'.$param.'" target="_parent" onclick="window.parent.API.save_asset();" alt="'.$altHome.'" title="'.$altHome.'">';
 	$html .= '<img src="'.api_get_path(WEB_IMG_PATH).'spacer.gif" width="42px" height="37px"  alt="'.$altHome.'" title="'.$altHome.'" />';
 	$html .= '</a>';
  	$html .= "</div>";
@@ -124,7 +124,7 @@
   // Html header for the Author tool
  	$html=	"<div id='left'>" .										// home button
 			"<a id=\"back2home\" class='course_main_home_button' width='42px' height='37px' href=".api_get_path(WEB_COURSE_PATH).$_course['path'].'/index.php'.$param.">";
- 	$html .= '<img src="'.api_get_path(WEB_IMG_PATH).'spacer.gif" width="42px" height="37px" target="_self" onclick="window.parent.API.save_asset();" alt="'.$altHome.'" title="'.$altHome.'" />';
+ 	$html .= '<img src="'.api_get_path(WEB_IMG_PATH).'spacer.gif" width="42px" height="37px" target="_parent" onclick="window.parent.API.save_asset();" alt="'.$altHome.'" title="'.$altHome.'" />';
  	$html .= '</a><div style="padding-top: 5px; padding-left: 53px;">';
              if (isset($_GET['action']) && $_GET['action'] == 'view') {
                 $html .= renderCourseToggleMenu($menuItems);

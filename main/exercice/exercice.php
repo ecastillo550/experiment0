@@ -182,7 +182,7 @@ if ($origin == 'learnpath') {
 
 // redirect to exercise reporting page
 if ($show == 'result') {
-    header('Location: '.api_get_path(WEB_CODE_PATH).'exercice/exercice_reporting.php?'.api_get_cidreq());
+    header('Location: '.api_get_path(WEB_CODE_PATH).'newscorm/lp_controller.php?action=course&'.api_get_cidreq());
     exit;
 }
 

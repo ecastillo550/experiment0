@@ -597,7 +597,7 @@ class WorkModel
 		$form->addElement('hidden','sec_token',$stok);
 		$form->addElement('hidden','assignment_id','','id="assignment_id"');
 		$form->addElement('hidden','default_assignment_id','','id="default_assignment_id"');
-		$form->addElement('file', 'file', get_lang('PaperUpload'), 'size="40" id="papper-file" onchange="updateDocumentTitle(this.value)" class="required"');
+		$form->addElement('file', 'file', get_lang('PaperUpload'), 'size="40" id="papper-file" onchange="updateDocumentTitle(this.value)"');
 		$form->addRule('file', get_lang('ThisFieldIsRequired'), 'uploadedfile');
 
 		$form->addElement('text', 'title', get_lang("TitleWork"), 'id="file_upload"  style="width: 350px;"');
@@ -749,7 +749,8 @@ class WorkModel
 					$this->sendmail_paper_to_tutor($authors,$Id,$user_id,$title,$assignment_title,$assignment_description,$deadline);	
 				}
 			}
-      }		
+      }	
+	
 	}
 
 	public function getPapersTable() {

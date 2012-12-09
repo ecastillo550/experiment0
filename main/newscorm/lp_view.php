@@ -224,6 +224,18 @@ foreach($list as $toc) {
 
 $current_item_type = isset($_SESSION['oLP']->current)?$_SESSION['oLP']->items[$_SESSION['oLP']->current]->get_type():'';
 
+
+//---------------------mensaje de ya terminaste
+
+
+$TBL_LP_VIEW			= Database::get_course_table(TABLE_LP_VIEW);
+$youdiditquery = 'SELECT * FROM ' . $TBL_LP_VIEW . 'WHERE user_id='.api_get_user_id().' AND lp_id='.$_GET['lp_id'];
+$youdiditres = Database::query($youdiditquery,__FILE__,__LINE__);
+$youdiditrow = Database::fetch_array($youdiditres);
+if((int)$youdiditrow['progress']==100){
+    echo "<script type='text/javascript'>alert('You have reached ".$youdiditrow['progress']."% of this module');</script>";
+}
+
 $autostart = 'true';
 // update status,total_time from lp_item_view table when you finish the exercises in learning path
 if ($type_quiz && !empty($_REQUEST['exeId']) && isset($_GET['lp_id']) && isset($_GET['lp_item_id'])) {
@@ -248,7 +260,7 @@ if ($type_quiz && !empty($_REQUEST['exeId']) && isset($_GET['lp_id']) && isset($
 		$mytime = ((int)$time_exe_date-(int)$time_start_date);
 		$score = (float)$row_dates['exe_result'];
 		$max_score = (float)$row_dates['exe_weighting'];
-
+    
 		$sql_upd_status = "UPDATE $TBL_LP_ITEM_VIEW SET status = 'completed' WHERE lp_item_id = '".(int)$safe_item_id."'
 				 AND lp_view_id = (SELECT lp_view.id FROM $TBL_LP_VIEW lp_view WHERE user_id = '".(int)$_SESSION['oLP']->user_id."' AND lp_id='".(int)$safe_id."')";
 		Database::query($sql_upd_status,__FILE__,__LINE__);
