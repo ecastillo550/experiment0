@@ -669,7 +669,7 @@ class WorkModel
     
     if(!$LOCK){
 
-		if ((!empty($_FILES['file']['size']) && !empty($is_course_member)) || api_is_platform_admin()) {	
+		if (!empty($is_course_member) || api_is_platform_admin()) {	
 			
 				$updir = api_get_path(SYS_COURSE_PATH) . $_course["path"] . '/work'; //directory path to upload
 

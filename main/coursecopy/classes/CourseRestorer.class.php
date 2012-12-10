@@ -135,11 +135,12 @@ class CourseRestorer
 			$this->restore_scorm_documents();
 			$this->restore_course_descriptions();
 			$this->restore_quizzes(); // after restore_documents! (for correct import of sound/video)
-			$this->restore_learnpaths();
+      $this->restore_learnpaths();
 			$this->restore_surveys();
 			$this->restore_student_publication();
 			$this->restore_glossary();
 			$this->restore_wiki();
+      
 		}
 
 
@@ -202,7 +203,57 @@ class CourseRestorer
 					}
 				}
 		}
-	}
+    
+    // Parche 0.1
+    //Copiando path del lp item anterior
+   $work_new = Database :: get_course_table(TABLE_STUDENT_PUBLICATION, $this->course->destination_db);
+   $lp_new = Database :: get_course_table(TABLE_LP_ITEM, $this->course->destination_db);
+   $lp_origin = Database :: get_course_table(TABLE_LP_MAIN,$my_course_info['dbName']);
+   
+   
+   $sql_work = "SELECT id,title FROM $work_new WHERE filetype='folder' ";
+   $query_work = Database::query($sql_work,__FILE__,__LINE__);
+   
+   $sql_new = "SELECT * FROM $lp_new";
+   $query_new = Database::query($sql_new,__FILE__,__LINE__);
+   
+   $sql_origin = "SELECT * FROM $lp_origin";
+   $query_origin = Database::query($sql_origin,__FILE__,__LINE__);
+   $n = 0; 
+   
+   while ($row_work = Database :: fetch_array($query_work)) {
+            $assignments[$n]['id'] = $row_work['id'];
+            $assignments[$n]['title'] = $row_work['title'];
+            $n++;
+       }
+       
+  
+    while ($row_new = Database :: fetch_array($query_new)) {
+        for ($counter = 0; $counter < count($n) ; $count++){
+            if($row_new['title'] == $assignments[$counter]['title']){
+                      $sql_update = "UPDATE $lp_new SET path=".$assignments[$counter]['id']."
+                      WHERE title=".$assignments[$counter]['title']." ";
+                     
+                      Database::query($sql_update,__FILE__,__LINE__);
+                      
+            }  
+        $debug = "Insert into $lp_new (item_type, path) values ($assignments[$counter]['title'] ,$assignments[$counter]['id'])";
+        Database::query($debug,__FILE__,__LINE__);
+        }
+    }
+
+   
+   
+       
+            
+            
+//             if ($row_new['title'] == $row_work['title'] && $row_new['item_type'] == 'student_publication'){
+//                   $sql_update = "UPDATE $lp_new SET path=".$row_work['id']." FROM $lp_new as lp, 
+//                   $work_new as work  WHERE work.title=lp.title";
+//                   Database::query($sql_update,__FILE__,__LINE__);
+//             }
+	
+  }
 	/**
 	 * Restore documents
 	 */
