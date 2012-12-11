@@ -208,51 +208,54 @@ class CourseRestorer
     //Copiando path del lp item anterior
    $work_new = Database :: get_course_table(TABLE_STUDENT_PUBLICATION, $this->course->destination_db);
    $lp_new = Database :: get_course_table(TABLE_LP_ITEM, $this->course->destination_db);
-   $lp_origin = Database :: get_course_table(TABLE_LP_MAIN,$my_course_info['dbName']);
+   $lp_origin = Database :: get_course_table(TABLE_LP_ITEM, $my_course_info['dbName']);
    
-   
-   $sql_work = "SELECT id,title FROM $work_new WHERE filetype='folder' ";
+   //query para tabla nueva de tareas
+   $sql_work = "SELECT * FROM $work_new WHERE filetype='folder' ";
    $query_work = Database::query($sql_work,__FILE__,__LINE__);
-   
-   $sql_new = "SELECT * FROM $lp_new";
+   //query tabla nueva lp item
+   $sql_new = "SELECT * FROM $lp_new ";
    $query_new = Database::query($sql_new,__FILE__,__LINE__);
-   
-   $sql_origin = "SELECT * FROM $lp_origin";
+   //query tabla vieja de lp item
+   $sql_origin = "SELECT * FROM $lp_origin ";
    $query_origin = Database::query($sql_origin,__FILE__,__LINE__);
-   $n = 0; 
-   
-   while ($row_work = Database :: fetch_array($query_work)) {
-            $assignments[$n]['id'] = $row_work['id'];
-            $assignments[$n]['title'] = $row_work['title'];
-            $n++;
-       }
-       
-  
-    while ($row_new = Database :: fetch_array($query_new)) {
-        for ($counter = 0; $counter < count($n) ; $count++){
-            if($row_new['title'] == $assignments[$counter]['title']){
-                      $sql_update = "UPDATE $lp_new SET path=".$assignments[$counter]['id']."
-                      WHERE title=".$assignments[$counter]['title']." ";
-                     
-                      Database::query($sql_update,__FILE__,__LINE__);
-                      
-            }  
-        $debug = "Insert into $lp_new (item_type, path) values ($assignments[$counter]['title'] ,$assignments[$counter]['id'])";
-        Database::query($debug,__FILE__,__LINE__);
-        }
-    }
 
    
+   $num_new = Database :: num_rows($query_new);
+   $num_work = Database :: num_rows($query_work);
+    //formatting arrays
+		if ($num_new>0) {
+			$listnew = array();
+			while ($rownew = Database::fetch_array($query_new)) {
+				$listnew[] = $rownew;	
+			}
+      }
+      
+		if ($num_work>0) {
+			$listwork = array();
+			while ($rowwork = Database::fetch_array($query_work)) {
+				$listwork[] = $rowwork;	
+			}
+      }				
    
-       
-            
-            
-//             if ($row_new['title'] == $row_work['title'] && $row_new['item_type'] == 'student_publication'){
-//                   $sql_update = "UPDATE $lp_new SET path=".$row_work['id']." FROM $lp_new as lp, 
-//                   $work_new as work  WHERE work.title=lp.title";
-//                   Database::query($sql_update,__FILE__,__LINE__);
-//             }
-	
+    $File = "debug.txt"; 
+    $Handle = fopen($File, 'w');
+   fwrite($Handle, $sql_new);
+   fwrite($Handle, $sql_origin);
+   
+   for ($newcounter = 0; $newcounter < $num_new ;$newcounter++){
+        for ($workcounter = 0; $workcounter < $num_work;$workcounter++){
+        fwrite($Handle, "\n\n workcounter: " . $workcounter . " ". $listwork[$workcounter][2]);
+        fwrite($Handle, "\n newcounter: " . $newcounter . " ". $listnew[$newcounter][4]);
+        $san_lp_title = str_replace("_" , " " , $listnew[$newcounter][4]);
+              if($san_lp_title==$listwork[$workcounter][2]){
+                   $sql_update = 'UPDATE '.$lp_new.' SET path="'.$listwork[$workcounter][0].'" WHERE title="'.$listnew[$newcounter][4].'" ';
+                   Database::query($sql_update,__FILE__,__LINE__); 
+                   fwrite($Handle, "FIRE! $sql_update");
+             }
+        } 
+   }
+   fclose($File);
   }
 	/**
 	 * Restore documents

@@ -8023,7 +8023,7 @@ class learnpath {
             $return .= "\t\t" . '<tr>' . "\n";
 
             $return .= "\t\t\t" . '<td class="label"><label for="idTitle">' . get_lang('Title') . '</label></td>' . "\n";
-            $return .= "\t\t\t" . '<td class="input"><input id="idTitle" name="title" size="44" type="text" value="' . $item_title . '" class="learnpath_item_form" /></td>' . "\n";
+            $return .= "\t\t\t" . '<td class="input">' . $item_title . '</td>' . "\n";
 
             $return .= "\t\t" . '</tr>' . "\n";
         }
