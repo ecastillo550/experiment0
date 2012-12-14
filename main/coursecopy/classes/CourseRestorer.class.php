@@ -260,11 +260,37 @@ class CourseRestorer
 
     // Parche 0.2
     //Copiando path del lp item anterior (FORUM)
+   $forum_old = Database :: get_course_table(TABLE_FORUM, $my_course_info['dbName']);
    $forum = Database :: get_course_table(TABLE_FORUM, $this->course->destination_db);
    $lp_new = Database :: get_course_table(TABLE_LP_ITEM, $this->course->destination_db);
    $lp_origin = Database :: get_course_table(TABLE_LP_ITEM, $my_course_info['dbName']);
+
+
+//Copiar estado de las tablas anteriores sin importar el contenido de las nuevas.
+//query para tabla vieja de forum
+   $sql_forum_old = "SELECT * FROM $forum_old ";
+   $query_forum_old = Database::query($sql_forum_old,__FILE__,__LINE__);  
+// TRUNCATE la nueva tabla de forum
+   $sql_forum = "TRUNCATE TABLE $forum ";
+   $query_forum = Database::query($sql_forum,__FILE__,__LINE__);
+
+ $num_old_forum = Database :: num_rows($query_forum_old);  
+//formatting arrays
+	if ($num_old_forum>0) {
+		$listoldforum = array();
+		while ($rowoldforum = Database::fetch_array($query_forum_old)) {
+			$listoldforum[] = $rowoldforum;	
+		}
+    }
+
+  	for($counter = 0 ; $counter < $num_old_forum; $counter++) {
+  		$sql_update = '';
+        Database::query($sql_update,__FILE__,__LINE__); 
+  	}
+
+
    
-   //query para tabla nueva de tareas
+   //query para tabla nueva de forum
    $sql_forum = "SELECT * FROM $forum ";
    $query_forum = Database::query($sql_forum,__FILE__,__LINE__);
    //query tabla nueva lp item
@@ -688,7 +714,7 @@ class CourseRestorer
 					", locked = ".(int)Database::escape_string($forum->locked).
 					", session_id = ".(int)Database::escape_string($forum->session_id).
 					", forum_image = '".Database::escape_string($forum->image)."'";
-          fwrite($Handle, "FIRE! $sql \n");
+            	fwrite($Handle, "FIRE! $sql \n");
 				Database::query($sql, __FILE__, __LINE__);
 				$new_id = Database::insert_id();
 				$this->course->resources[RESOURCE_FORUM][$id]->destination_id = $new_id;
