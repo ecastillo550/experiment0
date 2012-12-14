@@ -897,7 +897,7 @@ class WorkModel
 							$title_tag = '<a href="'.api_get_self().'?'.api_get_cidReq().'&action=correct_paper&id='.$paper_id.'&assignment_id='.intval($this->assignment_id).'">'.$paper_title.'</a>';
 				}
 				else {
-							$paper_icon =  '<center>'.build_document_icon_tag('file',$paper_url).'</center>';
+							$paper_icon =  '<center><a href="'.api_get_self().'?'.api_get_cidReq().'&action=view_paper&id='.$paper_id.'&assignment_id='.intval($this->assignment_id).'">'.build_document_icon_tag('file',$paper_url).'</a></center>';
 							$title_tag = '<a href="'.api_get_self().'?'.api_get_cidReq().'&action=view_paper&id='.$paper_id.'&assignment_id='.intval($this->assignment_id).'">'.$paper_title.'</a>';
 				}
 				
