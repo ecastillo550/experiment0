@@ -130,6 +130,7 @@ class CourseRestorer
 			$this->restore_links();
 			$this->restore_tool_intro();
 			$this->restore_events();
+      $this->restore_forums();
 			$this->restore_announcements();
 			$this->restore_documents();
 			$this->restore_scorm_documents();
@@ -238,24 +239,107 @@ class CourseRestorer
 			}
       }				
    
-    $File = "debug.txt"; 
-    $Handle = fopen($File, 'w');
-   fwrite($Handle, $sql_new);
-   fwrite($Handle, $sql_origin);
+  //  $File = "debug.txt"; 
+ //   $Handle = fopen($File, 'w');
+ //  fwrite($Handle, $sql_new);
+ //  fwrite($Handle, $sql_origin);
    
    for ($newcounter = 0; $newcounter < $num_new ;$newcounter++){
         for ($workcounter = 0; $workcounter < $num_work;$workcounter++){
-        fwrite($Handle, "\n\n workcounter: " . $workcounter . " ". $listwork[$workcounter][2]);
-        fwrite($Handle, "\n newcounter: " . $newcounter . " ". $listnew[$newcounter][4]);
+  //      fwrite($Handle, "\n\n workcounter: " . $workcounter . " ". $listwork[$workcounter][2]);
+  //      fwrite($Handle, "\n newcounter: " . $newcounter . " ". $listnew[$newcounter][4]);
         $san_lp_title = str_replace("_" , " " , $listnew[$newcounter][4]);
               if($san_lp_title==$listwork[$workcounter][2]){
-                   $sql_update = 'UPDATE '.$lp_new.' SET path="'.$listwork[$workcounter][0].'" WHERE title="'.$listnew[$newcounter][4].'" ';
+                   $sql_update = 'UPDATE '.$lp_new.' SET path="'.$listwork[$workcounter][0].'" WHERE title="'.$listnew[$newcounter][4].'" AND item_type="student_publication" ';
                    Database::query($sql_update,__FILE__,__LINE__); 
-                   fwrite($Handle, "FIRE! $sql_update");
+ //                  fwrite($Handle, "FIRE! $sql_update");
              }
         } 
    }
-   fclose($File);
+//   fclose($File);
+
+    // Parche 0.2
+    //Copiando path del lp item anterior (FORUM)
+   $forum_old = Database :: get_course_table(TABLE_FORUM, $my_course_info['dbName']);
+   $forum = Database :: get_course_table(TABLE_FORUM, $this->course->destination_db);
+   $lp_new = Database :: get_course_table(TABLE_LP_ITEM, $this->course->destination_db);
+   $lp_origin = Database :: get_course_table(TABLE_LP_ITEM, $my_course_info['dbName']);
+
+
+//Copiar estado de las tablas anteriores sin importar el contenido de las nuevas.
+//query para tabla vieja de forum
+   $sql_forum_old = "SELECT * FROM $forum_old ";
+   $query_forum_old = Database::query($sql_forum_old,__FILE__,__LINE__);  
+// TRUNCATE la nueva tabla de forum
+   $sql_forum = "TRUNCATE TABLE $forum ";
+   $query_forum = Database::query($sql_forum,__FILE__,__LINE__);
+
+ $num_old_forum = Database :: num_rows($query_forum_old);  
+//formatting arrays
+	if ($num_old_forum>0) {
+		$listoldforum = array();
+		while ($rowoldforum = Database::fetch_array($query_forum_old)) {
+			$listoldforum[] = $rowoldforum;	
+		}
+    }
+
+  	for($counter = 0 ; $counter < $num_old_forum; $counter++) {
+  		$sql_update = "INSERT INTO $forum VALUES (";
+      for($i = 0 ; $i < 17; $i++){
+          $sql_update .= "$listoldforum[$i], ";
+      }
+      $sql_update .= "$listoldforum[18]) ";
+        Database::query($sql_update,__FILE__,__LINE__); 
+  	}
+
+
+   
+   //query para tabla nueva de forum
+   $sql_forum = "SELECT * FROM $forum ";
+   $query_forum = Database::query($sql_forum,__FILE__,__LINE__);
+   //query tabla nueva lp item
+   $sql_new = "SELECT * FROM $lp_new ";
+   $query_new = Database::query($sql_new,__FILE__,__LINE__);
+   //query tabla vieja de lp item
+   $sql_origin = "SELECT * FROM $lp_origin ";
+   $query_origin = Database::query($sql_origin,__FILE__,__LINE__);
+
+   
+   $num_new = Database :: num_rows($query_new);
+   $num_forum = Database :: num_rows($query_forum);
+    //formatting arrays
+		if ($num_new>0) {
+			$listnew = array();
+			while ($rownew = Database::fetch_array($query_new)) {
+				$listnew[] = $rownew;	
+			}
+      }
+      
+		if ($num_forum>0) {
+			$listforum = array();
+			while ($rowforum = Database::fetch_array($query_forum)) {
+				$listforum[] = $rowforum;	
+			}
+      }				
+   
+  //  $File = "debug.txt"; 
+ //   $Handle = fopen($File, 'w');
+ //  fwrite($Handle, $sql_new);
+ //  fwrite($Handle, $sql_origin);
+   
+   for ($newcounter = 0; $newcounter < $num_new ;$newcounter++){
+        for ($forumcounter = 0; $forumcounter < $num_forum; $forumcounter++){
+  //      fwrite($Handle, "\n\n workcounter: " . $workcounter . " ". $listwork[$workcounter][2]);
+  //      fwrite($Handle, "\n newcounter: " . $newcounter . " ". $listnew[$newcounter][4]);
+  //      $san_lp_title = str_replace("_" , " " , $listnew[$newcounter][4]);
+              if($listnew[$newcounter][4]==$listforum[$forumcounter][1]){
+                   $sql_update = 'UPDATE '.$lp_new.' SET path="'.$listforum[$forumcounter][0].'" WHERE title="'.$listnew[$newcounter][4].'" AND item_type="forum"';
+                   Database::query($sql_update,__FILE__,__LINE__); 
+ //                  fwrite($Handle, "FIRE! $sql_update");
+             }
+        } 
+   }
+//   fclose($File);
   }
 	/**
 	 * Restore documents
@@ -599,12 +683,19 @@ class CourseRestorer
 	 */
 	function restore_forums()
 	{
+            $File = "debug.txt"; 
+    $Handle = fopen($File, 'w');
+   fwrite($Handle, $sql_new);
+   fwrite($Handle, $sql_origin);
+   
 		if ($this->course->has_resources(RESOURCE_FORUM))
 		{
 			$table_forum = Database :: get_course_table(TABLE_FORUM, $this->course->destination_db);
 			$table_topic = Database :: get_course_table(TABLE_FORUM_THREAD, $this->course->destination_db);
 			$table_post = Database :: get_course_table(TABLE_FORUM_POST, $this->course->destination_db);
 			$resources = $this->course->resources;
+      fwrite($Handle, " IN \n");
+      
 			foreach ($resources[RESOURCE_FORUM] as $id => $forum)
 			{
 				$cat_id = $this->restore_forum_category($forum->category_id);
@@ -627,6 +718,7 @@ class CourseRestorer
 					", locked = ".(int)Database::escape_string($forum->locked).
 					", session_id = ".(int)Database::escape_string($forum->session_id).
 					", forum_image = '".Database::escape_string($forum->image)."'";
+            	fwrite($Handle, "FIRE! $sql \n");
 				Database::query($sql, __FILE__, __LINE__);
 				$new_id = Database::insert_id();
 				$this->course->resources[RESOURCE_FORUM][$id]->destination_id = $new_id;
@@ -650,6 +742,7 @@ class CourseRestorer
 				}
 			}
 		}
+       fclose($File);
 	}
 	/**
 	 * Restore forum-categories
