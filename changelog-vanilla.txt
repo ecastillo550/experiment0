@@ -1,6 +1,7 @@
 Change log on database:
 1- Changed default value of quiz->type to 2.
 2- Flag added on track_e_attempt , default 0
+3- Changed email_template (content on user registration). added all the languages.
 
 
 Assignments -> Student-publication table
