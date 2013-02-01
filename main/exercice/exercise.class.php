@@ -690,7 +690,7 @@ if (!class_exists('Exercise')):
     //$sql="UPDATE $TBL_QUESTIONS SET position='".Database::escape_string($position)."' WHERE id='".Database::escape_string($questionId)."'";
     $sql = "UPDATE $TBL_QUIZ_QUESTION SET question_order='" . Database::escape_string($position) . "' " .
             "WHERE question_id='" . Database::escape_string($questionId) . "' and exercice_id=" . Database::escape_string($this->id) . "";
-    api_sql_query($sql, __FILE__, __LINE__);
+    //api_sql_query($sql, __FILE__, __LINE__);
    }
   }
   /**

@@ -226,7 +226,13 @@ $current_item_type = isset($_SESSION['oLP']->current)?$_SESSION['oLP']->items[$_
 
 
 //---------------------mensaje de ya terminaste
-
+//echo "<script type='text/javascript'>window.onbeforeunload = function() { return "Your work could be lost if you have not completed all the stages of the activity."; };</script>";
+ echo '<script>
+for(i=0; i<25; i++){
+window.location.href="#"+i;
+}
+window.location.href="#inicio";
+</script>';
 
 $TBL_LP_VIEW			= Database::get_course_table(TABLE_LP_VIEW);
 $youdiditquery = 'SELECT * FROM ' . $TBL_LP_VIEW . 'WHERE user_id='.api_get_user_id().' AND lp_id='.$_GET['lp_id'];

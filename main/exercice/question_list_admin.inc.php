@@ -179,7 +179,7 @@ $result = Database::query($sql, __FILE__, __LINE__);
 while($row = Database::fetch_array($result))
 {	
 	$scenario_type = $row['scenario_type'];	
-	$sql_in = "SELECT DISTINCT(question.id) AS id FROM $TBL_EXERCICES quiz, $TBL_QUESTIONS question, $TBL_EXERCICE_QUESTION rel_question, $TBL_QUIZ_TYPE quiz_type WHERE quiz.id=rel_question.exercice_id AND rel_question.question_id = question.id AND quiz.id = quiz_type.exercice_id AND rel_question.exercice_id = quiz_type.exercice_id AND question.level = ".$row['quiz_level']." AND question.category = ".$row['category_id']." ORDER BY rel_question.question_order LIMIT ".$row['number_of_question'];		
+	$sql_in = "SELECT DISTINCT(question.id) AS id FROM $TBL_EXERCICES quiz, $TBL_QUESTIONS question, $TBL_EXERCICE_QUESTION rel_question, $TBL_QUIZ_TYPE quiz_type WHERE quiz.id=rel_question.exercice_id AND rel_question.question_id = question.id AND quiz.id = quiz_type.exercice_id AND rel_question.exercice_id = quiz_type.exercice_id AND question.level = ".$row['quiz_level']." AND question.category = ".$row['category_id']." ORDER BY rel_question.question_order, question.position LIMIT ".$row['number_of_question'];		
 	$result_in = Database::query($sql_in, __FILE__, __LINE__);
 	$num_questions = Database::num_rows($result_in);	
 	if($num_questions <> 0){	
@@ -192,7 +192,7 @@ while($row = Database::fetch_array($result))
 }
 else
 {
-	$sql = "SELECT question.id FROM $TBL_EXERCICES quiz, $TBL_QUESTIONS question, $TBL_EXERCICE_QUESTION rel_question WHERE quiz.id=rel_question.exercice_id AND rel_question.question_id = question.id AND quiz.id=".Database::escape_string(Security::remove_XSS($_REQUEST['exerciseId']))." ORDER BY rel_question.question_order";
+	$sql = "SELECT question.id FROM $TBL_EXERCICES quiz, $TBL_QUESTIONS question, $TBL_EXERCICE_QUESTION rel_question WHERE quiz.id=rel_question.exercice_id AND rel_question.question_id = question.id AND quiz.id=".Database::escape_string(Security::remove_XSS($_REQUEST['exerciseId']))." ORDER BY rel_question.question_order, question.position ";
 	$result = Database::query($sql, __FILE__, __LINE__);
 	$nbrQuestions = Database::num_rows($result);
 	while ($row = Database::fetch_array($result)) {

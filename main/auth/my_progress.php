@@ -407,6 +407,17 @@ foreach ($courses as $enreg) {
 				} else {
 					echo '<tr><td colspan="4">'.get_lang('NoEx').'</td></tr>';
 				}
+			//--------------------------------------------------------------------------------------------
+			//Assignments show	
+			?>
+            <tr>
+			  <th class="head" style="color:#000"><?php echo get_lang('Exercices'); ?></th>
+			  <th class="head" style="color:#000"><?php echo get_lang('Score'); ?></th>
+			  <th class="head" style="color:#000"><?php echo get_lang('Attempts'); ?></th>
+			  <th class="head" style="color:#000"><?php echo get_lang('Details'); ?></th>
+			</tr>
+            <?php
+			echo '<tr> </tr>';
 			?>
 		</table>
 		<?php
